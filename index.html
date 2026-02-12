@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Separador de Dados (Distinct Mode)</title>
+    
+    <style>
+        /* --- ESTILOS GERAIS --- */
+        body { font-family: 'Segoe UI', 'Roboto', Helvetica, Arial, sans-serif; background-color: #0d0d0d; color: #e0e0e0; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; transition: background-color 0.5s; }
+        
+        /* CONTAINER COM BORDA DINÂMICA */
+        .container { 
+            background-color: #1a1a1a; 
+            padding: 25px; 
+            border-radius: 12px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
+            width: 98%; 
+            max-width: 1400px; 
+            min-height: 85vh; 
+            display: block; 
+            border: 1px solid #333;
+            border-top-width: 6px; /* Borda grossa no topo para indicar o modo */
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        /* TÍTULO DINÂMICO */
+        h1 { 
+            text-align: center; 
+            margin-bottom: 30px; 
+            font-weight: 800; 
+            letter-spacing: 1px; 
+            text-transform: uppercase;
+            transition: color 0.3s, text-shadow 0.3s;
+            font-size: 28px;
+        }
+        
+        /* --- MODOS VISUAIS (CLASSES ADICIONADAS VIA JS) --- */
+        
+        /* MODO CADASTRO (AZUL) */
+        .mode-cadastro .container {
+            border-top-color: #007bff;
+            box-shadow: 0 0 40px rgba(0, 123, 255, 0.15);
+        }
+        .mode-cadastro h1 {
+            color: #4dabf7;
+            text-shadow: 0 0 20px rgba(0, 123, 255, 0.6);
+        }
+        .mode-cadastro .titulo-icon { filter: drop-shadow(0 0 5px #007bff); }
+
+        /* MODO BOLETOS (VERDE) */
+        .mode-boletos .container {
+            border-top-color: #28a745;
+            box-shadow: 0 0 40px rgba(40, 167, 69, 0.15);
+        }
+        .mode-boletos h1 {
+            color: #28a745;
+            text-shadow: 0 0 20px rgba(40, 167, 69, 0.6);
+        }
+        .mode-boletos .titulo-icon { filter: drop-shadow(0 0 5px #28a745); }
+
+        /* --- CAMPOS DE TEXTO --- */
+        textarea { width: 100%; height: 80px; margin-bottom: 25px; padding: 15px; border: 1px solid #444; border-radius: 6px; resize: vertical; background-color: #222; color: #fff; font-family: 'Consolas', 'Monaco', monospace; font-size: 13px; box-sizing: border-box; line-height: 1.5; transition: all 0.3s ease; }
+        
+        /* Focus dinâmico */
+        .mode-cadastro textarea:focus { border-color: #007bff; background-color: #252525; box-shadow: 0 0 10px rgba(0, 123, 255, 0.2); outline: none; }
+        .mode-boletos textarea:focus { border-color: #28a745; background-color: #252525; box-shadow: 0 0 10px rgba(40, 167, 69, 0.2); outline: none; }
+        
+        textarea::placeholder { color: #666; font-style: italic; font-family: 'Segoe UI', sans-serif; }
+
+        /* --- BOTÕES --- */
+        .button-group { display: flex; gap: 15px; justify-content: center; margin-bottom: 30px; flex-wrap: wrap; }
+        button { padding: 12px 24px; color: #ccc; border: 1px solid transparent; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; position: relative; transition: all 0.3s ease; background-color: #2a2a2a; }
+        button:hover { color: white; transform: translateY(-2px); }
+        button:active { transform: scale(0.98); box-shadow: none !important; }
+
+        /* CORES TEMÁTICAS */
+        .btn-cad, .tab-cad.active { background: linear-gradient(180deg, #0056b3, #004494); color: white; border: 1px solid #0056b3; }
+        .btn-cad:hover, .tab-cad:hover { background: linear-gradient(180deg, #0069d9, #0056b3); box-shadow: 0 0 15px rgba(0, 123, 255, 0.4); border-color: #4dabf7; }
+
+        .btn-bol, .tab-bol.active { background: linear-gradient(180deg, #1e7e34, #155724); color: white; border: 1px solid #1e7e34; }
+        .btn-bol:hover, .tab-bol:hover { background: linear-gradient(180deg, #28a745, #1e7e34); box-shadow: 0 0 15px rgba(40, 167, 69, 0.4); border-color: #85ff91; }
+
+        .btn-limpar { background: linear-gradient(180deg, #c82333, #a71d2a); color: white; border: 1px solid #bd2130; }
+        .btn-limpar:hover { background: linear-gradient(180deg, #dc3545, #c82333); box-shadow: 0 0 15px rgba(220, 53, 69, 0.4); border-color: #ff6b6b; }
+
+        .btn-csv { background: linear-gradient(180deg, #138496, #117a8b); color: white; }
+        .btn-csv:hover { background: linear-gradient(180deg, #17a2b8, #138496); box-shadow: 0 0 15px rgba(23, 162, 184, 0.4); }
+
+        .btn-reset { background: linear-gradient(180deg, #5c0000, #3d0000); color: #ff9999; border: 1px solid #5c0000; }
+        .btn-reset:hover { background: linear-gradient(180deg, #8a0000, #5c0000); color: white; box-shadow: 0 0 15px rgba(255, 0, 0, 0.2); }
+
+        /* --- FILTROS --- */
+        .filter-controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; gap: 15px; background-color: #222; padding: 10px 20px; border-radius: 8px; border: 1px solid #333; }
+        .filter-left { display: flex; gap: 10px; align-items: center; }
+        .month-select { padding: 10px 15px; border-radius: 6px; background-color: #111; color: #fff; border: 1px solid #444; font-size: 13px; font-weight: 600; outline: none; cursor: pointer; }
+        
+        /* --- ABAS (NAVBAR) --- */
+        .tab-buttons { 
+            display: flex; 
+            background-color: #121212; 
+            border-radius: 8px; 
+            padding: 15px; /* Mais espaço */
+            gap: 10px; 
+            margin-bottom: 25px; 
+            justify-content: center; 
+            flex-wrap: wrap; 
+            border: 1px solid #333; 
+        }
+        .tab-button { background-color: transparent; border: 1px solid transparent; opacity: 0.7; }
+        .tab-button.active { opacity: 1; transform: scale(1.05); }
+        
+        /* Separador Visual Grande */
+        .group-divider {
+            width: 2px;
+            background-color: #444;
+            height: 40px;
+            margin: 0 30px; /* Grande separação entre grupos */
+            align-self: center;
+        }
+        
+        .tab-label { 
+            display: block; 
+            text-align: center; 
+            font-size: 10px; 
+            color: #666; 
+            margin-bottom: 5px; 
+            letter-spacing: 2px;
+            font-weight: bold;
+        }
+
+        .tab-pane { display: none; }
+        .tab-pane.active { display: block; animation: fadeUp 0.3s ease-out; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- TABELA --- */
+        table { width: 100%; border-collapse: separate; border-spacing: 0; margin-top: 15px; border: 1px solid #333; border-radius: 8px; overflow: hidden; background: rgba(255, 255, 255, 0.01); }
+        th { background-color: #222; color: #ddd; padding: 15px; text-align: left; font-size: 12px; text-transform: uppercase; border-bottom: 1px solid #444; font-weight: 700; }
+        td { padding: 12px 15px; text-align: left; vertical-align: middle; font-size: 13px; border-bottom: 1px solid #2a2a2a; border-right: 1px solid #2a2a2a; transition: background-color 0.2s; }
+        td:last-child { border-right: none; }
+        tr:hover td { background-color: rgba(255, 255, 255, 0.03); }
+
+        /* --- CORES ESPECÍFICAS (TEXTO E CHECKBOX) --- */
+        #tbl-cadastro .data-row td { color: #4dabf7; }
+        #tbl-cadastro .data-row .copy-button { color: #4dabf7; }
+        #tbl-cadastro .chk { accent-color: #007bff; }
+        #tbl-cadastro .data-row .copy-button:hover { color: #fff; }
+
+        #tbl-boletos .data-row td { color: #00e676; }
+        #tbl-boletos .data-row .copy-button { color: #00e676; }
+        #tbl-boletos .chk { accent-color: #00e676; }
+        #tbl-boletos .data-row .copy-button:hover { color: #fff; }
+
+        /* --- ESTADOS (HIGHER PRIORITY) --- */
+        .linha-destaque td { background: linear-gradient(90deg, rgba(255, 193, 7, 0.1) 0%, rgba(255, 193, 7, 0.01) 100%) !important; border-top: 1px solid rgba(255, 193, 7, 0.2); color: #fff !important; }
+        .linha-destaque td:first-child { border-left: 3px solid #ffc107; }
+        .linha-destaque .copy-button { color: #ffca2c !important; text-shadow: 0 0 8px rgba(255, 193, 7, 0.5); }
+
+        .linha-selecionada td { background-color: rgba(0, 0, 0, 0.3) !important; color: #555 !important; text-decoration: line-through; }
+        .linha-selecionada .copy-button { color: #555 !important; text-decoration: line-through; }
+
+        /* --- DETALHES --- */
+        .details-row { display: none; }
+        .details-row td { background-color: rgba(255, 193, 7, 0.05); border-top: none; padding: 10px 20px 20px 20px; color: #ccc !important; }
+        .sub-task-container { display: flex; flex-direction: column; gap: 8px; padding-left: 35px; }
+        .sub-task-label { display: flex; align-items: center; gap: 10px; font-size: 12px; font-weight: 600; color: #e0e0e0; cursor: pointer; width: fit-content; }
+        .sub-task-label:hover { color: #ffc107; }
+        .sub-chk { accent-color: #ffc107; cursor: pointer; width: 14px; height: 14px; }
+
+        .copy-button { background: none; border: none; padding: 5px 0; cursor: pointer; font: inherit; text-align: left; width: 100%; transition: color 0.2s; }
+        .historico-item { background-color: #222; padding: 12px; margin-bottom: 8px; border-radius: 8px; border-left: 3px solid #444; font-size: 13px; color: #ccc; }
+    </style>
+</head>
+<body class="mode-cadastro"> <div class="container">
+        <h1 id="main-title"><span class="titulo-icon">👤</span> CADASTRO</h1>
+        
+        <div class="tab-buttons">
+            <div>
+                <span class="tab-label">AREA DE CADASTRO</span>
+                <button class="tab-button tab-cad active" onclick="abrirAba('cadastro-input', this)">Processar</button>
+                <button class="tab-button tab-cad" onclick="abrirAba('cadastro-hist', this)">Histórico</button>
+                <button class="tab-button tab-cad" onclick="abrirAba('cadastro-count', this)">Contagem</button>
+            </div>
+            
+            <div class="group-divider"></div>
+
+            <div>
+                <span class="tab-label">AREA DE BOLETOS</span>
+                <button class="tab-button tab-bol" onclick="abrirAba('boletos-input', this)">Processar</button>
+                <button class="tab-button tab-bol" onclick="abrirAba('boletos-hist', this)">Histórico</button>
+                <button class="tab-button tab-bol" onclick="abrirAba('boletos-count', this)">Contagem</button>
+            </div>
+        </div>
+        
+        <div id="cadastro-input-tab" class="tab-pane active" style="display: block;">
+            <h2 style="color: #4dabf7;">Processar Novos Contratos</h2>
+            <textarea id="textoCadastro" placeholder="DICA: Clique aqui e aperte Ctrl+V." oninput="executarSeparacao('cadastro')"></textarea>
+            <div class="button-group">
+                <button class="btn-cad" onclick="processarDados('cadastro')">Colar e Separar</button>
+                <button class="btn-cad" onclick="marcarTodos('cadastro')" id="btn-toggle-cadastro">Marcar Todos</button> 
+                <button class="btn-cad" onclick="copiarSelecionados('cadastro')" id="btn-copy-cadastro">Copiar Selecionados</button>
+                <button class="btn-limpar" onclick="limpar('cadastro')">Limpar</button>
+            </div>
+            <div id="res-cadastro"></div>
+        </div>
+
+        <div id="cadastro-hist-tab" class="tab-pane">
+            <h2 style="color: #4dabf7;">Histórico de Cadastros</h2>
+            <div class="filter-controls">
+                <div class="filter-left">
+                    <select id="filtro-mes-cadastro" class="month-select" onchange="renderizarHistorico('cadastro')">
+                        <option value="">Todos os Meses</option>
+                    </select>
+                    <button class="btn-csv" onclick="baixarCSV('cadastro')">📥 Baixar CSV</button>
+                </div>
+                <button class="btn-reset" onclick="resetarHistorico('cadastro')">🗑️ Limpar Histórico</button>
+            </div>
+            <div id="lista-cadastro"></div>
+        </div>
+
+        <div id="cadastro-count-tab" class="tab-pane">
+            <h2 style="color: #4dabf7;">Estatísticas de Cadastro</h2>
+            <div id="txt-count-cadastro"></div>
+            <div style="margin-top:20px; height:300px;"><canvas id="chart-cadastro"></canvas></div>
+        </div>
+
+        <div id="boletos-input-tab" class="tab-pane">
+            <h2 style="color: #28a745;">Processar Boletos</h2>
+            <textarea id="textoBoletos" placeholder="DICA: Clique aqui e aperte Ctrl+V." oninput="executarSeparacao('boletos')"></textarea>
+            <div class="button-group">
+                <button class="btn-bol" onclick="processarDados('boletos')">Colar e Separar</button>
+                <button class="btn-bol" onclick="marcarTodos('boletos')" id="btn-toggle-boletos">Marcar Todos</button> 
+                <button class="btn-bol" onclick="copiarSelecionados('boletos')" id="btn-copy-boletos">Copiar Selecionados</button>
+                <button class="btn-limpar" onclick="limpar('boletos')">Limpar</button>
+            </div>
+            <div id="res-boletos"></div>
+        </div>
+
+        <div id="boletos-hist-tab" class="tab-pane">
+            <h2 style="color: #28a745;">Histórico de Boletos</h2>
+            <div class="filter-controls">
+                <div class="filter-left">
+                    <select id="filtro-mes-boletos" class="month-select" onchange="renderizarHistorico('boletos')">
+                        <option value="">Todos os Meses</option>
+                    </select>
+                    <button class="btn-csv" onclick="baixarCSV('boletos')">📥 Baixar CSV</button>
+                </div>
+                <button class="btn-reset" onclick="resetarHistorico('boletos')">🗑️ Limpar Histórico</button>
+            </div>
+            <div id="lista-boletos"></div>
+        </div>
+
+        <div id="boletos-count-tab" class="tab-pane">
+            <h2 style="color: #28a745;">Estatísticas de Boletos</h2>
+            <div id="txt-count-boletos"></div>
+            <div style="margin-top:20px; height:300px;"><canvas id="chart-boletos"></canvas></div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" onerror="console.warn('Erro ao carregar Chart.js')"></script>
+    
+    <script>
+        /* --- CONFIGURAÇÕES --- */
+        const CONFIG = {
+            cadastro: { key: 'db_cad_v3', cols: 7, headers: ['', 'Contrato', 'Nome', 'Processo', 'Data Transito', 'Valor', 'ADV', 'VEICULO'] },
+            boletos: { key: 'db_bol_v3', cols: 3, headers: ['', 'Contrato', 'Nome', 'Processo'] }
+        };
+
+        function getStorage(key) { try { return JSON.parse(localStorage.getItem(key)) || []; } catch (e) { return []; } }
+        function setStorage(key, data) { try { localStorage.setItem(key, JSON.stringify(data)); } catch (e) { console.error(e); } }
+        function getHoje() { return new Date().toISOString().split('T')[0]; }
+
+        /* --- NAVEGAÇÃO E MUDANÇA DE MODO --- */
+        function abrirAba(tabId, btnElement) {
+            // Gerencia Abas
+            document.querySelectorAll('.tab-pane').forEach(el => { el.style.display = 'none'; el.classList.remove('active'); });
+            document.querySelectorAll('.tab-button').forEach(el => el.classList.remove('active'));
+
+            const aba = document.getElementById(tabId + '-tab');
+            if (aba) { aba.style.display = 'block'; setTimeout(() => aba.classList.add('active'), 10); }
+            if (btnElement) btnElement.classList.add('active');
+
+            // --- LÓGICA DE MUDANÇA DE TEMA/AMBIENTE ---
+            const body = document.body;
+            const titulo = document.getElementById('main-title');
+            
+            if (tabId.includes('cadastro')) {
+                body.classList.remove('mode-boletos');
+                body.classList.add('mode-cadastro');
+                titulo.innerHTML = '<span class="titulo-icon">👤</span> CADASTRO';
+                
+                if (tabId.includes('hist')) { preencherFiltroMes('cadastro'); renderizarHistorico('cadastro'); }
+                if (tabId.includes('count')) renderizarGrafico('cadastro');
+            } else {
+                body.classList.remove('mode-cadastro');
+                body.classList.add('mode-boletos');
+                titulo.innerHTML = '<span class="titulo-icon">📄</span> BOLETOS';
+                
+                if (tabId.includes('hist')) { preencherFiltroMes('boletos'); renderizarHistorico('boletos'); }
+                if (tabId.includes('count')) renderizarGrafico('boletos');
+            }
+        }
+
+        /* --- PROCESSAMENTO --- */
+        function processarDados(tipo) {
+            const area = document.getElementById(tipo === 'cadastro' ? 'textoCadastro' : 'textoBoletos');
+            if (area.value) { executarSeparacao(tipo); return; }
+            if (navigator.clipboard && navigator.clipboard.readText) {
+                navigator.clipboard.readText().then(txt => { area.value = txt; executarSeparacao(tipo); })
+                .catch(err => { alert("Para evitar o aviso de permissão, clique na caixa de texto e aperte Ctrl+V."); });
+            } else { alert("Use Ctrl+V dentro da caixa de texto."); }
+        }
+
+        function executarSeparacao(tipo) {
+            const txt = document.getElementById(tipo === 'cadastro' ? 'textoCadastro' : 'textoBoletos').value;
+            const resDiv = document.getElementById(tipo === 'cadastro' ? 'res-cadastro' : 'res-boletos');
+            const cfg = CONFIG[tipo];
+            
+            if (!txt.trim()) { resDiv.innerHTML = ''; return; }
+
+            // NOTA: Renderiza tabela mas NÃO salva ainda. Salva no Check.
+            
+            let html = `<table id="tbl-${tipo}"><thead><tr>`;
+            cfg.headers.forEach(h => html += `<th>${h}</th>`);
+            html += `</tr></thead><tbody>`;
+
+            const linhas = txt.split('\n');
+            let tempNum = '';
+            let rowCount = 0;
+            
+            for (let linha of linhas) {
+                linha = linha.trim();
+                if (!linha) continue;
+                const cols = linha.split('\t');
+                let c = '', n = '', p = '', extraCols = [];
+
+                if (cols.length >= 10) { // Planilha
+                    c = (cols[2] || '').trim(); n = (cols[3] || '').trim(); p = cols[4]; extraCols = cols;
+                } else { // Chat
+                    if (linha.match(/você|min/i) || linha.endsWith('!')) continue;
+                    const match = linha.match(/^(\S+)\s+(.+)$/);
+                    if (match) {
+                        if (tempNum && !match[1].match(/^\d+$/)) { c = tempNum; n = linha; tempNum = ''; }
+                        else if (match[1].match(/^[\d/R]+$/)) { c = match[1]; n = match[2]; tempNum = ''; }
+                        else { tempNum = ''; }
+                    } else if (linha.match(/^[\d/R]+$/)) { tempNum = linha; }
+                }
+
+                if (c && n) {
+                    html += criarHTMLDaLinha(tipo, c, n, extraCols, rowCount);
+                    rowCount++;
+                }
+            }
+            html += '</tbody></table>';
+            resDiv.innerHTML = html;
+            atualizarDestaques(tipo);
+        }
+
+        function criarHTMLDaLinha(tipo, c, n, cols, index) {
+            let rowId = `row-${tipo}-${index}`;
+            let row = `<tr id="${rowId}" class="data-row">
+                <td><input type="checkbox" class="chk" onchange="chkClick(this)"></td>
+                <td><button class="copy-button" onclick="copiar(this)">${c}</button></td>
+                <td><button class="copy-button" onclick="copiar(this)">${n}</button></td>
+                <td><button class="copy-button" onclick="copiar(this)">${cols[4]||''}</button></td>`;
+            
+            if (tipo === 'cadastro') {
+                row += `<td><button class="copy-button" onclick="copiar(this)">${cols[5]||''}</button></td>
+                        <td><button class="copy-button" onclick="copiar(this)">${cols[6]||''}</button></td>
+                        <td><button class="copy-button" onclick="copiar(this)">${cols[8]||''}</button></td>
+                        <td><button class="copy-button" onclick="copiar(this)">${cols[11]||''}</button></td></tr>`;
+                
+                row += `<tr id="${rowId}-details" class="details-row"><td colspan="8"><div class="sub-task-container">
+                            <label class="sub-task-label"><input type="checkbox" class="sub-chk" onchange="subChkClick(this)"> CADASTRO DO CUMPRIMENTO DE SENTENÇA</label>
+                            <label class="sub-task-label"><input type="checkbox" class="sub-chk" onchange="subChkClick(this)"> CADASTRO DA PARCELA E PREENCHIMENTO DO HISTÓRICO</label>
+                            <label class="sub-task-label"><input type="checkbox" class="sub-chk" onchange="subChkClick(this)"> ALTERAR DA ABA CADASTRO PARA CADASTRADOS</label>
+                            <label class="sub-task-label"><input type="checkbox" class="sub-chk" onchange="subChkClick(this)"> COLOCAR CONTRATO NA ABA DISTRIBUIR (PLANILHA BASE)</label>
+                        </div></td></tr>`;
+            } else { row += `</tr>`; }
+            return row;
+        }
+
+        /* --- SALVAR NO HISTÓRICO --- */
+        function salvarLinhaNoHistorico(tipo, trElement) {
+            const cells = trElement.querySelectorAll('td');
+            const c = cells[1].innerText;
+            const n = cells[2].innerText;
+            const p = cells[3].innerText;
+            
+            let obj = { contrato: c, nome: n, processo: p, data: getHoje() };
+            if (tipo === 'cadastro') {
+                obj.dt = cells[4].innerText; obj.val = cells[5].innerText; obj.adv = cells[6].innerText; obj.veic = cells[7].innerText;
+            }
+
+            const historico = getStorage(CONFIG[tipo].key);
+            // Verifica duplicidade no dia para não salvar repetido se desmarcar e marcar de novo
+            const jaExiste = historico.some(item => item.contrato === c && item.data === getHoje());
+            
+            if (!jaExiste) {
+                historico.push(obj);
+                setStorage(CONFIG[tipo].key, historico);
+            }
+        }
+
+        /* --- WORKFLOW --- */
+        function chkClick(chk) {
+            const tr = chk.closest('tr');
+            const tipo = chk.closest('div').id.includes('cadastro') ? 'cadastro' : 'boletos';
+            
+            if (chk.checked) {
+                tr.classList.add('linha-selecionada');
+                tr.classList.remove('linha-destaque');
+                salvarLinhaNoHistorico(tipo, tr); // Salva ao marcar
+            } else {
+                tr.classList.remove('linha-selecionada');
+            }
+
+            if (tipo === 'cadastro') {
+                const detailsRow = document.getElementById(tr.id + '-details');
+                if (detailsRow) detailsRow.querySelectorAll('.sub-chk').forEach(sub => sub.checked = chk.checked);
+            }
+            atualizarDestaques(tipo);
+        }
+
+        function subChkClick(subChk) {
+            const detailsRow = subChk.closest('tr');
+            const mainRow = document.getElementById(detailsRow.id.replace('-details', ''));
+            const mainChk = mainRow.querySelector('.chk');
+            const allChecked = Array.from(detailsRow.querySelectorAll('.sub-chk')).every(c => c.checked);
+            
+            if (mainChk.checked !== allChecked) {
+                mainChk.checked = allChecked;
+                if (allChecked) {
+                    mainRow.classList.add('linha-selecionada');
+                    salvarLinhaNoHistorico('cadastro', mainRow); // Salva ao completar sub-tarefas
+                } else {
+                    mainRow.classList.remove('linha-selecionada');
+                }
+            }
+            atualizarDestaques('cadastro');
+        }
+
+        function atualizarDestaques(tipo) {
+            const divId = tipo === 'cadastro' ? 'res-cadastro' : 'res-boletos';
+            const trs = document.querySelectorAll(`#${divId} tbody tr.data-row`);
+            trs.forEach(tr => {
+                if (!tr.querySelector('.chk').checked) tr.classList.remove('linha-destaque');
+                if (tipo === 'cadastro') { const d = document.getElementById(tr.id + '-details'); if(d) d.style.display = 'none'; }
+            });
+            for (let tr of trs) {
+                const chk = tr.querySelector('.chk');
+                if (chk && !chk.checked) {
+                    tr.classList.add('linha-destaque');
+                    if (tipo === 'cadastro') { const d = document.getElementById(tr.id + '-details'); if(d) d.style.display = 'table-row'; }
+                    break;
+                }
+            }
+        }
+
+        function marcarTodos(tipo) {
+            const divId = tipo === 'cadastro' ? 'res-cadastro' : 'res-boletos';
+            const chks = document.querySelectorAll(`#${divId} .data-row .chk`);
+            const status = !Array.from(chks).every(c => c.checked);
+            chks.forEach(c => { if (c.checked !== status) { c.checked = status; chkClick(c); } });
+            document.getElementById(tipo === 'cadastro' ? 'btn-toggle-cadastro' : 'btn-toggle-boletos').textContent = status ? 'Desmarcar Todos' : 'Marcar Todos';
+        }
+
+        function copiar(btn) {
+            const txt = btn.textContent;
+            navigator.clipboard.writeText(txt).then(() => {
+                const cor = btn.style.color; const sombra = btn.style.textShadow;
+                btn.textContent = "COPIADO!"; btn.style.color = "#28a745"; btn.style.textShadow = "0 0 10px rgba(40,167,69,0.5)"; btn.style.fontWeight = "bold";
+                setTimeout(() => { btn.textContent = txt; btn.style.color = cor; btn.style.textShadow = sombra; btn.style.fontWeight = "normal"; }, 1000);
+            });
+        }
+
+        function copiarSelecionados(tipo) {
+            const divId = tipo === 'cadastro' ? 'res-cadastro' : 'res-boletos';
+            const chks = document.querySelectorAll(`#${divId} .data-row .chk:checked`);
+            let txt = '';
+            chks.forEach(chk => {
+                const tr = chk.closest('tr');
+                let rowTxt = [];
+                tr.querySelectorAll('td:not(:first-child)').forEach(td => rowTxt.push(td.innerText));
+                txt += rowTxt.join('\t') + '\n';
+            });
+            if(txt) navigator.clipboard.writeText(txt).then(() => {
+                const btn = document.getElementById(tipo==='cadastro'?'btn-copy-cadastro':'btn-copy-boletos');
+                const orig = btn.textContent; btn.textContent = "COPIADO!";
+                const cls = tipo==='cadastro'?'btn-cad':'btn-bol';
+                btn.classList.remove(cls); btn.style.background='#28a745'; btn.style.boxShadow='0 0 15px rgba(40,167,69,0.6)';
+                setTimeout(() => { btn.textContent = orig; btn.style.background=''; btn.style.boxShadow=''; btn.classList.add(cls); }, 1000);
+            }); else alert('Nada selecionado.');
+        }
+
+        function limpar(tipo) {
+            document.getElementById(tipo === 'cadastro' ? 'textoCadastro' : 'textoBoletos').value = '';
+            document.getElementById(tipo === 'cadastro' ? 'res-cadastro' : 'res-boletos').innerHTML = '';
+        }
+
+        /* --- FILTROS, HISTÓRICO E RESET --- */
+        function preencherFiltroMes(tipo) {
+            const select = document.getElementById(`filtro-mes-${tipo}`);
+            const dados = getStorage(CONFIG[tipo].key);
+            const valorAtual = select.value;
+            const meses = new Set(dados.map(item => item.data.substring(0, 7)));
+            const mesesOrdenados = Array.from(meses).sort().reverse();
+            select.innerHTML = '<option value="">Todos os Meses</option>';
+            mesesOrdenados.forEach(mes => {
+                const [ano, numMes] = mes.split('-');
+                const nomeMes = new Date(ano, numMes - 1).toLocaleString('pt-BR', { month: 'long' });
+                const label = `${nomeMes.charAt(0).toUpperCase() + nomeMes.slice(1)} / ${ano}`;
+                const option = document.createElement('option'); option.value = mes; option.textContent = label; select.appendChild(option);
+            });
+            if (valorAtual) select.value = valorAtual;
+        }
+
+        function renderizarHistorico(tipo) {
+            const div = document.getElementById(tipo === 'cadastro' ? 'lista-cadastro' : 'lista-boletos');
+            const filtroMes = document.getElementById(`filtro-mes-${tipo}`).value;
+            const dados = getStorage(CONFIG[tipo].key);
+            const dadosFiltrados = filtroMes ? dados.filter(item => item.data.startsWith(filtroMes)) : dados;
+            if (dadosFiltrados.length === 0) { div.innerHTML = '<p>Vazio</p>'; return; }
+            div.innerHTML = dadosFiltrados.slice().reverse().map(d => `<div class="historico-item"><small>${d.data}</small> <strong style="color:${tipo==='cadastro'?'#4dabf7':'#28a745'}">${d.contrato}</strong> ${d.nome}</div>`).join('');
+        }
+
+        function resetarHistorico(tipo) {
+            if (confirm(`ATENÇÃO: Deseja apagar TODO o histórico de ${tipo.toUpperCase()}?\nIsso não pode ser desfeito.`)) {
+                localStorage.removeItem(CONFIG[tipo].key);
+                renderizarHistorico(tipo);
+                // Reseta dropdown
+                document.getElementById(`filtro-mes-${tipo}`).innerHTML = '<option value="">Todos os Meses</option>';
+                alert('Histórico limpo.');
+            }
+        }
+
+        let chartInstance = null;
+        function renderizarGrafico(tipo) {
+            const ctx = document.getElementById(tipo === 'cadastro' ? 'chart-cadastro' : 'chart-boletos');
+            if (!ctx || typeof Chart === 'undefined') return;
+            const dados = getStorage(CONFIG[tipo].key);
+            const mapa = {};
+            dados.forEach(d => { if(!mapa[d.data]) mapa[d.data] = new Set(); mapa[d.data].add(d.contrato); });
+            const labels = Object.keys(mapa).sort();
+            const values = labels.map(l => mapa[l].size);
+            document.getElementById(tipo === 'cadastro' ? 'txt-count-cadastro' : 'txt-count-boletos').innerHTML = labels.map((l, i) => `<b>${l}:</b> ${values[i]}`).join(' | ');
+            if (chartInstance) chartInstance.destroy();
+            chartInstance = new Chart(ctx, { type: 'bar', data: { labels: labels, datasets: [{ label: 'Contratos Únicos', data: values, backgroundColor: tipo === 'cadastro' ? '#007bff' : '#28a745' }] }, options: { responsive: true, maintainAspectRatio: false } });
+        }
+
+        function baixarCSV(tipo) {
+            const filtroMes = document.getElementById(`filtro-mes-${tipo}`).value;
+            const dados = getStorage(CONFIG[tipo].key);
+            const dadosExportar = filtroMes ? dados.filter(item => item.data.startsWith(filtroMes)) : dados;
+            if (!dadosExportar.length) return alert('Sem dados.');
+            let csv = "Data;Contrato;Nome;Processo\n";
+            dadosExportar.forEach(d => { csv += `${d.data};${d.contrato};${d.nome};${d.processo||''}\n`; });
+            const a = document.createElement('a'); a.href = 'data:text/csv;charset=utf-8,' + encodeURI(csv); a.download = `Relatorio_${tipo}${filtroMes ? '_'+filtroMes : ''}.csv`; a.click();
+        }
+    </script>
+</body>
+</html>
