@@ -3,323 +3,613 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Separador de Dados (Distinct Mode)</title>
+    <title>Separador de Dados Pro</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <style>
-        /* --- ESTILOS GERAIS --- */
-        body { font-family: 'Segoe UI', 'Roboto', Helvetica, Arial, sans-serif; background-color: #0d0d0d; color: #e0e0e0; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; transition: background-color 0.5s; }
+        /* --- ESTILOS GERAIS (LAYOUT APP TELA CHEIA) --- */
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #0d0d0d; 
+            color: #e0e0e0; 
+            margin: 0; 
+            padding: 15px 20px; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            transition: background-color 0.5s ease; 
+            height: 100vh; 
+            box-sizing: border-box;
+            overflow: hidden; 
+        }
         
-        /* CONTAINER COM BORDA DINÂMICA */
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #1a1a1a; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: #444; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #666; }
+
+        /* Container Principal Dinâmico */
         .container { 
             background-color: #1a1a1a; 
-            padding: 25px; 
+            padding: 15px 25px; 
             border-radius: 12px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
-            width: 98%; 
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6); 
+            width: 100%; 
             max-width: 1400px; 
-            min-height: 85vh; 
-            display: block; 
-            border: 1px solid #333;
-            border-top-width: 6px; /* Borda grossa no topo para indicar o modo */
-            transition: border-color 0.3s, box-shadow 0.3s;
+            flex: 1; 
+            min-height: 0; 
+            display: flex; 
+            flex-direction: column; 
+            border: 1px solid #333; 
+            border-top-width: 6px; 
+            box-sizing: border-box;
+            transition: border-color 0.4s, box-shadow 0.4s; 
         }
 
-        /* TÍTULO DINÂMICO */
-        h1 { 
-            text-align: center; 
-            margin-bottom: 30px; 
+        h1 { display: none; } 
+        h2 { color: #fff; margin-top: 0; margin-bottom: 10px; font-weight: 700; letter-spacing: 1px; font-size: 20px;}
+
+        /* --- NAVEGAÇÃO PRINCIPAL (MÓDULOS) --- */
+        .main-nav { display: flex; justify-content: center; gap: 15px; margin-bottom: 15px; align-self: center; flex-shrink: 0; }
+        .main-nav-btn { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #2a2a2a; 
+            border: 1px solid transparent; 
+            color: #ccc; 
+            padding: 10px 0; 
+            font-size: 13px; 
             font-weight: 800; 
+            text-transform: uppercase; 
             letter-spacing: 1px; 
-            text-transform: uppercase;
-            transition: color 0.3s, text-shadow 0.3s;
-            font-size: 28px;
+            border-radius: 8px; 
+            cursor: pointer; 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 8px; 
+            width: 170px; 
         }
+        .main-nav-btn:hover { color: #fff; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        .main-nav-btn:active { transform: scale(0.97); box-shadow: none !important; }
         
-        /* --- MODOS VISUAIS (CLASSES ADICIONADAS VIA JS) --- */
-        
-        /* MODO CADASTRO (AZUL) */
-        .mode-cadastro .container {
-            border-top-color: #007bff;
-            box-shadow: 0 0 40px rgba(0, 123, 255, 0.15);
-        }
-        .mode-cadastro h1 {
-            color: #4dabf7;
-            text-shadow: 0 0 20px rgba(0, 123, 255, 0.6);
-        }
-        .mode-cadastro .titulo-icon { filter: drop-shadow(0 0 5px #007bff); }
+        /* --- NAVEGAÇÃO INTERNA (ABAS) --- */
+        .sub-nav { display: flex; gap: 10px; margin-bottom: 15px; border-bottom: 2px solid #222; padding-bottom: 8px; flex-shrink: 0; }
+        .sub-nav-btn { font-family: 'Inter', sans-serif; background: transparent; border: none; color: #888; font-size: 12px; font-weight: 600; text-transform: uppercase; padding: 8px 15px; cursor: pointer; transition: 0.3s; position: relative; }
+        .sub-nav-btn:hover { color: #fff; }
+        .sub-nav-btn::after { content: ''; position: absolute; bottom: -10px; left: 0; width: 100%; height: 3px; border-radius: 3px 3px 0 0; background: transparent; transition: 0.3s; transform: scaleX(0); }
+        .sub-nav-btn.active::after { transform: scaleX(1); }
+        .sub-nav-btn.active { color: #fff; font-weight: 800; }
 
-        /* MODO BOLETOS (VERDE) */
-        .mode-boletos .container {
-            border-top-color: #28a745;
-            box-shadow: 0 0 40px rgba(40, 167, 69, 0.15);
-        }
-        .mode-boletos h1 {
-            color: #28a745;
-            text-shadow: 0 0 20px rgba(40, 167, 69, 0.6);
-        }
-        .mode-boletos .titulo-icon { filter: drop-shadow(0 0 5px #28a745); }
+        /* --- WORKSPACES E TRANSIÇÕES FLEX --- */
+        .workspace { display: none; flex-direction: column; flex: 1; min-height: 0; animation: fadeIn 0.4s ease forwards; }
+        .workspace.active { display: flex; }
+        
+        .tab-pane { display: none; width: 100%; flex-direction: column; flex: 1; min-height: 0; animation: slideUp 0.3s ease forwards; }
+        .tab-pane.active { display: flex; }
+        
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* --- CAMPOS DE TEXTO --- */
-        textarea { width: 100%; height: 80px; margin-bottom: 25px; padding: 15px; border: 1px solid #444; border-radius: 6px; resize: vertical; background-color: #222; color: #fff; font-family: 'Consolas', 'Monaco', monospace; font-size: 13px; box-sizing: border-box; line-height: 1.5; transition: all 0.3s ease; }
+        /* --- MODOS VISUAIS E CORES DOS BOTÕES DO MENU --- */
+        .mode-cadastro .container { border-top-color: #007bff; box-shadow: 0 0 40px rgba(0, 123, 255, 0.12); }
+        .mode-cadastro .main-nav-btn.active { background: linear-gradient(180deg, #0056b3, #004494); color: white; border-color: #004494; box-shadow: 0 4px 15px rgba(0, 123, 255, 0.4); }
+        .mode-cadastro .sub-nav-btn.active::after { background: #007bff; }
         
-        /* Focus dinâmico */
-        .mode-cadastro textarea:focus { border-color: #007bff; background-color: #252525; box-shadow: 0 0 10px rgba(0, 123, 255, 0.2); outline: none; }
-        .mode-boletos textarea:focus { border-color: #28a745; background-color: #252525; box-shadow: 0 0 10px rgba(40, 167, 69, 0.2); outline: none; }
+        .mode-boletos .container { border-top-color: #28a745; box-shadow: 0 0 40px rgba(40, 167, 69, 0.12); }
+        .mode-boletos .main-nav-btn.active { background: linear-gradient(180deg, #1e7e34, #155724); color: white; border-color: #155724; box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4); }
+        .mode-boletos .sub-nav-btn.active::after { background: #28a745; }
+
+        /* --- META VISUAL (GAMIFICAÇÃO) --- */
+        .meta-container { background: rgba(255,255,255,0.03); padding: 12px 20px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #333; transition: all 0.5s ease; position: relative; overflow: hidden; flex-shrink: 0; }
+        .meta-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; position: relative; z-index: 2; }
+        .meta-text-title { font-size: 13px; font-weight: 800; color: #fff; letter-spacing: 0.5px; display: flex; align-items: center; }
+        .meta-text-count { font-size: 12px; color: #aaa; }
+        .btn-meta { font-family: 'Inter', sans-serif; background: #2a2a2a; border: 1px solid #555; color: #ddd; padding: 4px 10px; border-radius: 6px; font-size: 10px; cursor: pointer; text-transform: uppercase; transition: 0.2s; font-weight: bold; }
+        .btn-meta:hover { background: #444; color: #fff; border-color: #4dabf7; }
         
-        textarea::placeholder { color: #666; font-style: italic; font-family: 'Segoe UI', sans-serif; }
+        .progress-bar-bg { width: 100%; height: 12px; background: #111; border-radius: 8px; overflow: hidden; box-shadow: inset 0 2px 5px rgba(0,0,0,0.8); position: relative; z-index: 2; }
+        .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #0056b3, #00d4ff); width: 0%; transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 0 15px rgba(0, 123, 255, 0.5); }
+        
+        .meta-success { border-color: #ffc107; box-shadow: 0 0 30px rgba(255, 193, 7, 0.15); background: rgba(255, 193, 7, 0.05); }
+        .meta-success .progress-bar-fill { background: linear-gradient(90deg, #ffc107, #ffe066); box-shadow: 0 0 20px rgba(255, 193, 7, 0.6); }
+
+        /* --- SMART PASTE ZONE --- */
+        .smart-paste-zone { border: 2px dashed #444; border-radius: 12px; padding: 15px; text-align: center; background-color: #151515; cursor: pointer; transition: all 0.3s ease; margin-bottom: 15px; outline: none; display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 80px; flex-shrink: 0; }
+        .mode-cadastro .smart-paste-zone:hover, .mode-cadastro .smart-paste-zone:focus { border-color: #007bff; background-color: #1a1a1a; box-shadow: 0 0 15px rgba(0,123,255,0.1); }
+        .mode-boletos .smart-paste-zone:hover, .mode-boletos .smart-paste-zone:focus { border-color: #28a745; background-color: #1a1a1a; box-shadow: 0 0 15px rgba(40,167,69,0.1); }
+        .paste-icon { font-size: 20px; margin-bottom: 5px; opacity: 0.8; }
+        .smart-paste-zone h3 { margin: 0 0 4px 0; color: #fff; font-size: 15px; font-weight: 700; }
+        .smart-paste-zone p { margin: 0; color: #888; font-size: 12px; }
+        
+        /* Oculta de vez as áreas de texto antigas */
+        textarea { display: none; } 
 
         /* --- BOTÕES --- */
-        .button-group { display: flex; gap: 15px; justify-content: center; margin-bottom: 30px; flex-wrap: wrap; }
-        button { padding: 12px 24px; color: #ccc; border: 1px solid transparent; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; position: relative; transition: all 0.3s ease; background-color: #2a2a2a; }
-        button:hover { color: white; transform: translateY(-2px); }
-        button:active { transform: scale(0.98); box-shadow: none !important; }
+        .button-group { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; justify-content: center; flex-shrink: 0;}
+        button { font-family: 'Inter', sans-serif; padding: 10px 20px; color: #ccc; border: 1px solid transparent; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; transition: all 0.2s ease; background-color: #2a2a2a; }
+        button:hover { color: white; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        button:active { transform: scale(0.97); box-shadow: none !important; }
 
-        /* CORES TEMÁTICAS */
-        .btn-cad, .tab-cad.active { background: linear-gradient(180deg, #0056b3, #004494); color: white; border: 1px solid #0056b3; }
-        .btn-cad:hover, .tab-cad:hover { background: linear-gradient(180deg, #0069d9, #0056b3); box-shadow: 0 0 15px rgba(0, 123, 255, 0.4); border-color: #4dabf7; }
+        .btn-cad { background: linear-gradient(180deg, #0056b3, #004494); color: white; border: 1px solid #004494; }
+        .btn-cad:hover { background: linear-gradient(180deg, #0069d9, #0056b3); border-color: #4dabf7; }
 
-        .btn-bol, .tab-bol.active { background: linear-gradient(180deg, #1e7e34, #155724); color: white; border: 1px solid #1e7e34; }
-        .btn-bol:hover, .tab-bol:hover { background: linear-gradient(180deg, #28a745, #1e7e34); box-shadow: 0 0 15px rgba(40, 167, 69, 0.4); border-color: #85ff91; }
+        .btn-bol { background: linear-gradient(180deg, #1e7e34, #155724); color: white; border: 1px solid #155724; }
+        .btn-bol:hover { background: linear-gradient(180deg, #28a745, #1e7e34); border-color: #85ff91; }
 
-        .btn-limpar { background: linear-gradient(180deg, #c82333, #a71d2a); color: white; border: 1px solid #bd2130; }
-        .btn-limpar:hover { background: linear-gradient(180deg, #dc3545, #c82333); box-shadow: 0 0 15px rgba(220, 53, 69, 0.4); border-color: #ff6b6b; }
+        .btn-limpar { background: linear-gradient(180deg, #c82333, #a71d2a); color: white; border: 1px solid #a71d2a; }
+        .btn-limpar:hover { background: linear-gradient(180deg, #dc3545, #c82333); border-color: #ff6b6b; }
 
-        .btn-csv { background: linear-gradient(180deg, #138496, #117a8b); color: white; }
+        .btn-csv { background: linear-gradient(180deg, #138496, #117a8b); color: white; white-space: nowrap; }
         .btn-csv:hover { background: linear-gradient(180deg, #17a2b8, #138496); box-shadow: 0 0 15px rgba(23, 162, 184, 0.4); }
 
-        .btn-reset { background: linear-gradient(180deg, #5c0000, #3d0000); color: #ff9999; border: 1px solid #5c0000; }
+        .btn-reset { background: linear-gradient(180deg, #5c0000, #3d0000); color: #ff9999; border: 1px solid #5c0000; white-space: nowrap; }
         .btn-reset:hover { background: linear-gradient(180deg, #8a0000, #5c0000); color: white; box-shadow: 0 0 15px rgba(255, 0, 0, 0.2); }
 
-        /* --- FILTROS --- */
-        .filter-controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; gap: 15px; background-color: #222; padding: 10px 20px; border-radius: 8px; border: 1px solid #333; }
-        .filter-left { display: flex; gap: 10px; align-items: center; }
-        .month-select { padding: 10px 15px; border-radius: 6px; background-color: #111; color: #fff; border: 1px solid #444; font-size: 13px; font-weight: 600; outline: none; cursor: pointer; }
+        /* --- FILTROS HISTÓRICO --- */
+        .filter-controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; gap: 15px; width: 100%; flex-wrap: wrap; flex-shrink: 0;}
+        .filter-left { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+        .month-select { font-family: 'Inter', sans-serif; padding: 8px 12px; border-radius: 6px; background-color: #111; color: #fff; border: 1px solid #444; font-size: 12px; font-weight: 600; outline: none; cursor: pointer; }
         
-        /* --- ABAS (NAVBAR) --- */
-        .tab-buttons { 
+        /* --- ESTILOS DOS FILTROS ESTATÍSTICOS --- */
+        .stat-btn-group { display: flex; gap: 5px; background: #111; padding: 4px; border-radius: 8px; border: 1px solid #333;}
+        .stat-btn { font-family: 'Inter', sans-serif; background: transparent; color: #888; border: none; padding: 6px 12px; border-radius: 4px; font-size: 11px; transition: 0.3s; box-shadow: none; text-transform: uppercase; font-weight: bold;}
+        .stat-btn:hover { color: #fff; background: rgba(255,255,255,0.05); transform: none;}
+        .mode-cadastro .stat-btn.active { background: #0056b3; color: #fff; }
+        .mode-boletos .stat-btn.active { background: #1e7e34; color: #fff; }
+        
+        /* --- DASHBOARD ESTATÍSTICAS FLUIDO --- */
+        .export-container { 
+            padding: 15px 20px; 
+            border-radius: 12px; 
+            background-color: #1a1a1a; 
+            border: 1px solid transparent; 
             display: flex; 
-            background-color: #121212; 
-            border-radius: 8px; 
-            padding: 15px; /* Mais espaço */
-            gap: 10px; 
-            margin-bottom: 25px; 
-            justify-content: center; 
-            flex-wrap: wrap; 
-            border: 1px solid #333; 
-        }
-        .tab-button { background-color: transparent; border: 1px solid transparent; opacity: 0.7; }
-        .tab-button.active { opacity: 1; transform: scale(1.05); }
-        
-        /* Separador Visual Grande */
-        .group-divider {
-            width: 2px;
-            background-color: #444;
-            height: 40px;
-            margin: 0 30px; /* Grande separação entre grupos */
-            align-self: center;
+            flex-direction: column; 
+            flex: 1; 
+            min-height: 0;
         }
         
-        .tab-label { 
-            display: block; 
-            text-align: center; 
-            font-size: 10px; 
-            color: #666; 
-            margin-bottom: 5px; 
-            letter-spacing: 2px;
-            font-weight: bold;
-        }
+        .export-header { display: flex; flex-direction: column; align-items: flex-start; margin-bottom: 10px; border-bottom: 1px solid #333; padding-bottom: 10px; flex-shrink: 0;}
+        
+        .export-controls { display: flex; justify-content: space-between; align-items: center; width: 100%; margin-top: 10px; }
+        .export-controls-left { display: flex; gap: 10px; align-items: center; }
 
-        .tab-pane { display: none; }
-        .tab-pane.active { display: block; animation: fadeUp 0.3s ease-out; }
-        @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .metrics-wrapper { display: flex; gap: 15px; justify-content: center; margin-bottom: 15px; flex-wrap: wrap; flex-shrink: 0;}
+        .metric-box { background: rgba(255,255,255,0.03); padding: 12px; border-radius: 8px; border: 1px solid #333; text-align: center; display: flex; flex-direction: column; gap: 5px; min-width: 130px; flex: 1; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+        .metric-box span { font-size: 10px; color: #888; text-transform: uppercase; letter-spacing: 1px; font-weight: 700;}
+        .metric-box strong { font-size: 26px; color: #fff; font-weight: 800; line-height: 1; }
+        
+        .weekly-breakdown { display: flex; gap: 8px; justify-content: center; margin-bottom: 10px; flex-wrap: wrap; flex-shrink: 0;}
+        .weekly-breakdown .metric-box { min-width: 90px; padding: 8px 5px; }
+        .weekly-breakdown span { font-size: 9px; line-height: 1.3; color: #777; white-space: nowrap; } 
+        .weekly-breakdown strong { font-size: 18px; margin-top: 2px; }
 
-        /* --- TABELA --- */
-        table { width: 100%; border-collapse: separate; border-spacing: 0; margin-top: 15px; border: 1px solid #333; border-radius: 8px; overflow: hidden; background: rgba(255, 255, 255, 0.01); }
-        th { background-color: #222; color: #ddd; padding: 15px; text-align: left; font-size: 12px; text-transform: uppercase; border-bottom: 1px solid #444; font-weight: 700; }
-        td { padding: 12px 15px; text-align: left; vertical-align: middle; font-size: 13px; border-bottom: 1px solid #2a2a2a; border-right: 1px solid #2a2a2a; transition: background-color 0.2s; }
-        td:last-child { border-right: none; }
-        tr:hover td { background-color: rgba(255, 255, 255, 0.03); }
+        .mode-cadastro .metric-box strong { color: #4dabf7; text-shadow: 0 0 10px rgba(0, 123, 255, 0.3); }
+        .mode-boletos .metric-box strong { color: #28a745; text-shadow: 0 0 10px rgba(40, 167, 69, 0.3); }
+        
+        .hide-on-print-only { display: flex !important; }
+        
+        .chart-wrapper { position: relative; flex: 1; min-height: 150px; width: 100%; margin-top: 5px; }
 
-        /* --- CORES ESPECÍFICAS (TEXTO E CHECKBOX) --- */
-        #tbl-cadastro .data-row td { color: #4dabf7; }
+        /* --- TABELA E CHECKBOXES (Área interna com Scroll) --- */
+        .table-responsive { flex: 1; min-height: 0; overflow-y: auto; border: 1px solid #333; border-radius: 8px; background: #111; display: none; } 
+        .table-responsive.has-data { display: block; animation: slideUp 0.3s ease forwards; }
+        table { width: 100%; border-collapse: separate; border-spacing: 0; }
+        th { background-color: #222; color: #ddd; padding: 12px 15px; text-align: left; font-size: 11px; text-transform: uppercase; border-bottom: 1px solid #444; font-weight: 700; position: sticky; top: 0; z-index: 10; box-shadow: 0 2px 5px rgba(0,0,0,0.5); }
+        td { padding: 10px 15px; text-align: left; vertical-align: middle; font-size: 12px; border-bottom: 1px solid #222; transition: background-color 0.2s; }
+        tr:hover td { background-color: #1a1a1a; }
+
+        .custom-cb { display: block; position: relative; padding-left: 22px; cursor: pointer; font-size: 14px; user-select: none; min-height: 18px; }
+        .custom-cb input { position: absolute; opacity: 0; cursor: pointer; height: 0; width: 0; }
+        .checkmark { position: absolute; top: 50%; left: 0; transform: translateY(-50%); height: 16px; width: 16px; background-color: #222; border: 2px solid #555; border-radius: 4px; transition: all 0.2s ease; }
+        .custom-cb:hover input ~ .checkmark { border-color: #888; }
+        .checkmark:after { content: ""; position: absolute; display: none; left: 4px; top: 1px; width: 4px; height: 8px; border: solid white; border-width: 0 2px 2px 0; transform: rotate(45deg); }
+        .custom-cb input:checked ~ .checkmark:after { display: block; }
+        .mode-cadastro .custom-cb input:checked ~ .checkmark { background-color: #007bff; border-color: #007bff; }
+        .mode-boletos .custom-cb input:checked ~ .checkmark { background-color: #28a745; border-color: #28a745; }
+
+        #tbl-cadastro .data-row td { color: #4dabf7; font-weight: 500; }
         #tbl-cadastro .data-row .copy-button { color: #4dabf7; }
-        #tbl-cadastro .chk { accent-color: #007bff; }
         #tbl-cadastro .data-row .copy-button:hover { color: #fff; }
-
-        #tbl-boletos .data-row td { color: #00e676; }
+        #tbl-boletos .data-row td { color: #00e676; font-weight: 500; }
         #tbl-boletos .data-row .copy-button { color: #00e676; }
-        #tbl-boletos .chk { accent-color: #00e676; }
         #tbl-boletos .data-row .copy-button:hover { color: #fff; }
 
-        /* --- ESTADOS (HIGHER PRIORITY) --- */
-        .linha-destaque td { background: linear-gradient(90deg, rgba(255, 193, 7, 0.1) 0%, rgba(255, 193, 7, 0.01) 100%) !important; border-top: 1px solid rgba(255, 193, 7, 0.2); color: #fff !important; }
+        .linha-destaque td { background: linear-gradient(90deg, rgba(255, 193, 7, 0.1) 0%, transparent 100%) !important; color: #fff !important; }
         .linha-destaque td:first-child { border-left: 3px solid #ffc107; }
         .linha-destaque .copy-button { color: #ffca2c !important; text-shadow: 0 0 8px rgba(255, 193, 7, 0.5); }
-
-        .linha-selecionada td { background-color: rgba(0, 0, 0, 0.3) !important; color: #555 !important; text-decoration: line-through; }
+        .linha-selecionada td { background-color: rgba(0, 0, 0, 0.4) !important; color: #555 !important; text-decoration: line-through; }
         .linha-selecionada .copy-button { color: #555 !important; text-decoration: line-through; }
 
-        /* --- DETALHES --- */
         .details-row { display: none; }
-        .details-row td { background-color: rgba(255, 193, 7, 0.05); border-top: none; padding: 10px 20px 20px 20px; color: #ccc !important; }
+        .details-row td { background-color: #151515; border-top: none; padding: 8px 20px 15px 20px; color: #ccc !important; }
         .sub-task-container { display: flex; flex-direction: column; gap: 8px; padding-left: 35px; }
-        .sub-task-label { display: flex; align-items: center; gap: 10px; font-size: 12px; font-weight: 600; color: #e0e0e0; cursor: pointer; width: fit-content; }
+        .sub-task-label { font-size: 11px; font-weight: 600; color: #bbb; cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center;}
         .sub-task-label:hover { color: #ffc107; }
-        .sub-chk { accent-color: #ffc107; cursor: pointer; width: 14px; height: 14px; }
+        .sub-chk { accent-color: #ffc107; width: 13px; height: 13px; margin-right: 8px; }
+        .copy-button { font-family: 'Inter', sans-serif; background: none; border: none; padding: 4px 0; cursor: pointer; font-size: 12px; text-align: left; width: 100%; transition: color 0.2s; font-weight: 500; }
+        
+        /* --- EMPTY STATES E HISTÓRICO COM SCROLL --- */
+        .history-list { flex: 1; overflow-y: auto; min-height: 0; padding-right: 5px; }
 
-        .copy-button { background: none; border: none; padding: 5px 0; cursor: pointer; font: inherit; text-align: left; width: 100%; transition: color 0.2s; }
-        .historico-item { background-color: #222; padding: 12px; margin-bottom: 8px; border-radius: 8px; border-left: 3px solid #444; font-size: 13px; color: #ccc; }
+        .empty-state { padding: 40px 20px; text-align: center; color: #666; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(255,255,255,0.02); border-radius: 8px; border: 1px dashed #333; height: 100%; box-sizing: border-box; }
+        .empty-state span { font-size: 40px; margin-bottom: 10px; opacity: 0.5; }
+        .empty-state p { margin: 0; font-size: 14px; font-weight: 500; }
+
+        .historico-item { background-color: #1a1a1a; padding: 12px 15px; margin-bottom: 8px; border-radius: 8px; border: 1px solid #333; font-size: 13px; color: #ccc; display: flex; align-items: center; gap: 15px; transition: 0.2s; }
+        .historico-item:hover { background-color: #222; border-color: #444; transform: translateX(5px); }
+        .time-badge { font-family: 'Inter', sans-serif; font-weight: 600; background: #000; padding: 3px 6px; border-radius: 4px; color: #888; font-size: 11px; border: 1px solid #222; }
+
+        /* --- TOAST NOTIFICATIONS --- */
+        #toast-container { position: fixed; bottom: 30px; right: 30px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
+        .toast { background: #222; color: #fff; padding: 12px 20px; border-radius: 8px; border-left: 4px solid #007bff; box-shadow: 0 10px 30px rgba(0,0,0,0.5); font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 10px; animation: toastIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; opacity: 0; transform: translateX(100%); }
+        .toast.success { border-color: #28a745; }
+        .toast.warning { border-color: #ffc107; }
+        .toast.error { border-color: #dc3545; }
+        .toast.hide { animation: toastOut 0.3s ease forwards; }
+        @keyframes toastIn { to { opacity: 1; transform: translateX(0); } }
+        @keyframes toastOut { to { opacity: 0; transform: translateX(100%); margin-bottom: -50px; } }
+
+        /* --- MODAL CONFIRMATION --- */
+        #modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
+        .modal-box { background: #1a1a1a; padding: 25px; border-radius: 12px; border: 1px solid #333; max-width: 400px; width: 90%; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.5); animation: slideUp 0.3s ease forwards; }
+        .modal-box h3 { margin-top: 0; color: #fff; font-size: 18px; }
+        .modal-box p { color: #aaa; font-size: 13px; margin-bottom: 20px; line-height: 1.5; }
+        .modal-buttons { display: flex; gap: 10px; justify-content: center; }
+        .modal-btn-cancel { background: #333; color: #fff; padding: 10px 15px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;}
+        .modal-btn-cancel:hover { background: #444; }
+        .modal-btn-confirm { background: #dc3545; color: #fff; padding: 10px 15px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;}
+        .modal-btn-confirm:hover { background: #bd2130; box-shadow: 0 0 15px rgba(220, 53, 69, 0.4); }
+
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
-<body class="mode-cadastro"> <div class="container">
-        <h1 id="main-title"><span class="titulo-icon">👤</span> CADASTRO</h1>
+<body class="mode-cadastro">
+
+    <div class="container">
         
-        <div class="tab-buttons">
-            <div>
-                <span class="tab-label">AREA DE CADASTRO</span>
-                <button class="tab-button tab-cad active" onclick="abrirAba('cadastro-input', this)">Processar</button>
-                <button class="tab-button tab-cad" onclick="abrirAba('cadastro-hist', this)">Histórico</button>
-                <button class="tab-button tab-cad" onclick="abrirAba('cadastro-count', this)">Contagem</button>
-            </div>
+        <div class="main-nav">
+            <button class="main-nav-btn active" id="nav-btn-cadastro" onclick="switchAppMode('cadastro')">👤 CADASTRO</button>
+            <button class="main-nav-btn" id="nav-btn-boletos" onclick="switchAppMode('boletos')">📄 BOLETOS</button>
+        </div>
+        
+        <div id="workspace-cadastro" class="workspace active">
             
-            <div class="group-divider"></div>
-
-            <div>
-                <span class="tab-label">AREA DE BOLETOS</span>
-                <button class="tab-button tab-bol" onclick="abrirAba('boletos-input', this)">Processar</button>
-                <button class="tab-button tab-bol" onclick="abrirAba('boletos-hist', this)">Histórico</button>
-                <button class="tab-button tab-bol" onclick="abrirAba('boletos-count', this)">Contagem</button>
+            <div class="sub-nav">
+                <button class="sub-nav-btn active" onclick="abrirAbaInterna('cadastro', 'input', this)">Processamento</button>
+                <button class="sub-nav-btn" onclick="abrirAbaInterna('cadastro', 'hist', this)">Histórico</button>
+                <button class="sub-nav-btn" onclick="abrirAbaInterna('cadastro', 'count', this)">Estatísticas</button>
             </div>
-        </div>
-        
-        <div id="cadastro-input-tab" class="tab-pane active" style="display: block;">
-            <h2 style="color: #4dabf7;">Processar Novos Contratos</h2>
-            <textarea id="textoCadastro" placeholder="DICA: Clique aqui e aperte Ctrl+V." oninput="executarSeparacao('cadastro')"></textarea>
-            <div class="button-group">
-                <button class="btn-cad" onclick="processarDados('cadastro')">Colar e Separar</button>
-                <button class="btn-cad" onclick="marcarTodos('cadastro')" id="btn-toggle-cadastro">Marcar Todos</button> 
-                <button class="btn-cad" onclick="copiarSelecionados('cadastro')" id="btn-copy-cadastro">Copiar Selecionados</button>
-                <button class="btn-limpar" onclick="limpar('cadastro')">Limpar</button>
-            </div>
-            <div id="res-cadastro"></div>
-        </div>
 
-        <div id="cadastro-hist-tab" class="tab-pane">
-            <h2 style="color: #4dabf7;">Histórico de Cadastros</h2>
-            <div class="filter-controls">
-                <div class="filter-left">
-                    <select id="filtro-mes-cadastro" class="month-select" onchange="renderizarHistorico('cadastro')">
-                        <option value="">Todos os Meses</option>
-                    </select>
-                    <button class="btn-csv" onclick="baixarCSV('cadastro')">📥 Baixar CSV</button>
+            <div id="cadastro-input-tab" class="tab-pane active">
+                
+                <div class="meta-container" id="meta-box-cadastro">
+                    <div class="meta-header">
+                        <div class="meta-text-title">
+                            <span id="meta-title-prefix">META DIÁRIA: </span> 
+                            <span id="meta-val-display" style="color:#4dabf7; margin-left:6px;">0</span>
+                        </div>
+                        <div class="meta-text-count"><strong id="progress-count" style="color:#fff;">0</strong> contratos processados hoje</div>
+                        <button class="btn-meta" onclick="editarMeta()">Ajustar Meta</button>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill" id="progresso-fill"></div>
+                    </div>
                 </div>
-                <button class="btn-reset" onclick="resetarHistorico('cadastro')">🗑️ Limpar Histórico</button>
-            </div>
-            <div id="lista-cadastro"></div>
-        </div>
 
-        <div id="cadastro-count-tab" class="tab-pane">
-            <h2 style="color: #4dabf7;">Estatísticas de Cadastro</h2>
-            <div id="txt-count-cadastro"></div>
-            <div style="margin-top:20px; height:300px;"><canvas id="chart-cadastro"></canvas></div>
-        </div>
-
-        <div id="boletos-input-tab" class="tab-pane">
-            <h2 style="color: #28a745;">Processar Boletos</h2>
-            <textarea id="textoBoletos" placeholder="DICA: Clique aqui e aperte Ctrl+V." oninput="executarSeparacao('boletos')"></textarea>
-            <div class="button-group">
-                <button class="btn-bol" onclick="processarDados('boletos')">Colar e Separar</button>
-                <button class="btn-bol" onclick="marcarTodos('boletos')" id="btn-toggle-boletos">Marcar Todos</button> 
-                <button class="btn-bol" onclick="copiarSelecionados('boletos')" id="btn-copy-boletos">Copiar Selecionados</button>
-                <button class="btn-limpar" onclick="limpar('boletos')">Limpar</button>
-            </div>
-            <div id="res-boletos"></div>
-        </div>
-
-        <div id="boletos-hist-tab" class="tab-pane">
-            <h2 style="color: #28a745;">Histórico de Boletos</h2>
-            <div class="filter-controls">
-                <div class="filter-left">
-                    <select id="filtro-mes-boletos" class="month-select" onchange="renderizarHistorico('boletos')">
-                        <option value="">Todos os Meses</option>
-                    </select>
-                    <button class="btn-csv" onclick="baixarCSV('boletos')">📥 Baixar CSV</button>
+                <div class="smart-paste-zone" id="paste-zone-cadastro" tabindex="0">
+                    <div class="paste-icon">📋</div>
+                    <h3>Pronto para receber contratos</h3>
+                    <p>Clique aqui e pressione <b>Ctrl + V</b> para processar os dados instantaneamente.</p>
                 </div>
-                <button class="btn-reset" onclick="resetarHistorico('boletos')">🗑️ Limpar Histórico</button>
+
+                <div class="button-group">
+                    <button class="btn-cad" onclick="marcarTodos('cadastro')" id="btn-toggle-cadastro">Marcar Todos</button> 
+                    <button class="btn-cad" onclick="copiarSelecionados('cadastro')" id="btn-copy-cadastro">Copiar Selecionados</button>
+                    <button class="btn-limpar" onclick="limpar('cadastro')">Limpar Tabela</button>
+                </div>
+                
+                <div class="table-responsive" id="res-cadastro"></div>
             </div>
-            <div id="lista-boletos"></div>
+
+            <div id="cadastro-hist-tab" class="tab-pane">
+                <div class="filter-controls">
+                    <div class="filter-left">
+                        <select id="filtro-mes-hist-cadastro" class="month-select" onchange="renderizarHistorico('cadastro')"></select>
+                        <button class="btn-csv" onclick="baixarCSV('cadastro')" style="background: #333; border:1px solid #555;">📥 Exportar CSV</button>
+                    </div>
+                    <button class="btn-reset" onclick="confirmarReset('cadastro')">🗑️ Limpar Histórico</button>
+                </div>
+                <div id="lista-cadastro" class="history-list"></div>
+            </div>
+
+            <div id="cadastro-count-tab" class="tab-pane">
+                <div id="export-container-cadastro" class="export-container">
+                    <div class="export-header">
+                        <h2 id="est-title-cadastro" style="color: #4dabf7; margin: 0; text-align: left; width: 100%;">Estatísticas de Cadastro</h2>
+                        
+                        <div class="export-controls data-html2canvas-ignore hide-on-print-only">
+                            <div class="export-controls-left">
+                                <div class="stat-btn-group">
+                                    <button class="stat-btn active" id="btn-cad-week" onclick="setStatView('cadastro', 'week')">SEMANA</button>
+                                    <button class="stat-btn" id="btn-cad-month" onclick="setStatView('cadastro', 'month')">MÊS</button>
+                                    <button class="stat-btn" id="btn-cad-year" onclick="setStatView('cadastro', 'year')">ANO</button>
+                                </div>
+                                <select id="filtro-semana-est-cadastro" class="month-select" onchange="renderizarGrafico('cadastro')"></select>
+                                <select id="filtro-mes-est-cadastro" class="month-select" style="display:none;" onchange="renderizarGrafico('cadastro')"></select>
+                            </div>
+                            <button class="btn-csv" onclick="baixarImagemEstatisticas('cadastro')" style="margin:0; background: linear-gradient(180deg, #138496, #117a8b);">📸 IMAGEM</button>
+                        </div>
+                    </div>
+
+                    <div class="metrics-wrapper">
+                        <div class="metric-box"><span>Média Diária (Úteis)</span> <strong id="avg-cadastro">0</strong></div>
+                        <div class="metric-box"><span>Maior Pico (Dia)</span> <strong id="max-cadastro">0</strong></div>
+                        <div class="metric-box"><span>Total no Período</span> <strong id="total-cadastro">0</strong></div>
+                    </div>
+
+                    <div id="weekly-breakdown-cadastro" class="weekly-breakdown" style="display: none;"></div>
+                    
+                    <div class="chart-wrapper">
+                        <canvas id="chart-cadastro"></canvas>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div id="boletos-count-tab" class="tab-pane">
-            <h2 style="color: #28a745;">Estatísticas de Boletos</h2>
-            <div id="txt-count-boletos"></div>
-            <div style="margin-top:20px; height:300px;"><canvas id="chart-boletos"></canvas></div>
+        <div id="workspace-boletos" class="workspace">
+            
+            <div class="sub-nav">
+                <button class="sub-nav-btn active" onclick="abrirAbaInterna('boletos', 'input', this)">Processamento</button>
+                <button class="sub-nav-btn" onclick="abrirAbaInterna('boletos', 'hist', this)">Histórico</button>
+                <button class="sub-nav-btn" onclick="abrirAbaInterna('boletos', 'count', this)">Estatísticas</button>
+            </div>
+
+            <div id="boletos-input-tab" class="tab-pane active">
+                
+                <div class="smart-paste-zone" id="paste-zone-boletos" tabindex="0">
+                    <div class="paste-icon">📋</div>
+                    <h3>Pronto para receber boletos</h3>
+                    <p>Clique aqui e pressione <b>Ctrl + V</b> para separar os dados do chat.</p>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn-bol" onclick="marcarTodos('boletos')" id="btn-toggle-boletos">Marcar Todos</button> 
+                    <button class="btn-bol" onclick="copiarSelecionados('boletos')" id="btn-copy-boletos">Copiar Selecionados</button>
+                    <button class="btn-limpar" onclick="limpar('boletos')">Limpar Tabela</button>
+                </div>
+                
+                <div class="table-responsive" id="res-boletos"></div>
+            </div>
+
+            <div id="boletos-hist-tab" class="tab-pane">
+                <div class="filter-controls">
+                    <div class="filter-left">
+                        <select id="filtro-mes-hist-boletos" class="month-select" onchange="renderizarHistorico('boletos')"></select>
+                        <button class="btn-csv" onclick="baixarCSV('boletos')" style="background: #333; border:1px solid #555;">📥 Exportar CSV</button>
+                    </div>
+                    <button class="btn-reset" onclick="confirmarReset('boletos')">🗑️ Limpar Histórico</button>
+                </div>
+                <div id="lista-boletos" class="history-list"></div>
+            </div>
+
+            <div id="boletos-count-tab" class="tab-pane">
+                <div id="export-container-boletos" class="export-container">
+                    <div class="export-header">
+                        <h2 id="est-title-boletos" style="color: #28a745; margin: 0; text-align: left; width: 100%;">Estatísticas de Boletos</h2>
+                        
+                        <div class="export-controls data-html2canvas-ignore hide-on-print-only">
+                            <div class="export-controls-left">
+                                <div class="stat-btn-group">
+                                    <button class="stat-btn active" id="btn-bol-week" onclick="setStatView('boletos', 'week')">SEMANA</button>
+                                    <button class="stat-btn" id="btn-bol-month" onclick="setStatView('boletos', 'month')">MÊS</button>
+                                    <button class="stat-btn" id="btn-bol-year" onclick="setStatView('boletos', 'year')">ANO</button>
+                                </div>
+                                <select id="filtro-semana-est-boletos" class="month-select" onchange="renderizarGrafico('boletos')"></select>
+                                <select id="filtro-mes-est-boletos" class="month-select" style="display:none;" onchange="renderizarGrafico('boletos')"></select>
+                            </div>
+                            <button class="btn-csv" onclick="baixarImagemEstatisticas('boletos')" style="margin:0; background: linear-gradient(180deg, #138496, #117a8b);">📸 IMAGEM</button>
+                        </div>
+                    </div>
+
+                    <div class="metrics-wrapper">
+                        <div class="metric-box"><span>Média Diária (Úteis)</span> <strong id="avg-boletos">0</strong></div>
+                        <div class="metric-box"><span>Maior Pico (Dia)</span> <strong id="max-boletos">0</strong></div>
+                        <div class="metric-box"><span>Total no Período</span> <strong id="total-boletos">0</strong></div>
+                    </div>
+
+                    <div id="weekly-breakdown-boletos" class="weekly-breakdown" style="display: none;"></div>
+                    
+                    <div class="chart-wrapper">
+                        <canvas id="chart-boletos"></canvas>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js" onerror="console.warn('Erro ao carregar Chart.js')"></script>
-    
+    <div id="toast-container"></div>
+
+    <div id="modal-overlay">
+        <div class="modal-box">
+            <h3>⚠️ Atenção!</h3>
+            <p id="modal-msg">Tem certeza que deseja apagar os dados?</p>
+            <div class="modal-buttons">
+                <button class="modal-btn-cancel" onclick="closeModal()">Cancelar</button>
+                <button class="modal-btn-confirm" id="modal-btn-confirm">Sim, apagar tudo</button>
+            </div>
+        </div>
+    </div>
+
     <script>
-        /* --- CONFIGURAÇÕES --- */
+        /* --- CONFIGURAÇÕES E ESTADO --- */
         const CONFIG = {
-            cadastro: { key: 'db_cad_v3', cols: 7, headers: ['', 'Contrato', 'Nome', 'Processo', 'Data Transito', 'Valor', 'ADV', 'VEICULO'] },
-            boletos: { key: 'db_bol_v3', cols: 3, headers: ['', 'Contrato', 'Nome', 'Processo'] }
+            cadastro: { key: 'db_cad_v3', cols: 7, headers: ['<span style="visibility:hidden">X</span>', 'Contrato', 'Nome', 'Processo', 'Data Transito', 'Valor', 'ADV', 'VEICULO'] },
+            boletos: { key: 'db_bol_v3', cols: 3, headers: ['<span style="visibility:hidden">X</span>', 'Contrato', 'Nome', 'Processo'] }
         };
+
+        let currentMode = 'cadastro'; 
+        let currentStatView = { cadastro: 'week', boletos: 'week' };
+        const diasSemana = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
 
         function getStorage(key) { try { return JSON.parse(localStorage.getItem(key)) || []; } catch (e) { return []; } }
         function setStorage(key, data) { try { localStorage.setItem(key, JSON.stringify(data)); } catch (e) { console.error(e); } }
-        function getHoje() { return new Date().toISOString().split('T')[0]; }
+        
+        function getHoje() { 
+            const hj = new Date();
+            return `${hj.getFullYear()}-${String(hj.getMonth()+1).padStart(2,'0')}-${String(hj.getDate()).padStart(2,'0')}`; 
+        }
+        function getHoraAtual() { return new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }); }
 
-        /* --- NAVEGAÇÃO E MUDANÇA DE MODO --- */
-        function abrirAba(tabId, btnElement) {
-            // Gerencia Abas
-            document.querySelectorAll('.tab-pane').forEach(el => { el.style.display = 'none'; el.classList.remove('active'); });
-            document.querySelectorAll('.tab-button').forEach(el => el.classList.remove('active'));
+        function formatarDataBR(dataISO) {
+            if(!dataISO) return '';
+            const p = dataISO.split('-');
+            if(p.length !== 3) return dataISO;
+            return `${p[2]}/${p[1]}/${p[0]}`; 
+        }
+        function formatarDataCurta(dataISO) {
+            if(!dataISO) return '';
+            const p = dataISO.split('-');
+            if(p.length !== 3) return dataISO;
+            return `${p[2]}/${p[1]}`; 
+        }
 
-            const aba = document.getElementById(tabId + '-tab');
-            if (aba) { aba.style.display = 'block'; setTimeout(() => aba.classList.add('active'), 10); }
-            if (btnElement) btnElement.classList.add('active');
-
-            // --- LÓGICA DE MUDANÇA DE TEMA/AMBIENTE ---
-            const body = document.body;
-            const titulo = document.getElementById('main-title');
+        /* --- SISTEMA DE TOASTS --- */
+        function showToast(msg, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            let icon = '✅';
+            if(type === 'warning') icon = '⚠️';
+            if(type === 'error') icon = '❌';
             
-            if (tabId.includes('cadastro')) {
-                body.classList.remove('mode-boletos');
-                body.classList.add('mode-cadastro');
-                titulo.innerHTML = '<span class="titulo-icon">👤</span> CADASTRO';
-                
-                if (tabId.includes('hist')) { preencherFiltroMes('cadastro'); renderizarHistorico('cadastro'); }
-                if (tabId.includes('count')) renderizarGrafico('cadastro');
+            toast.innerHTML = `<span>${icon}</span> <span>${msg}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => { toast.classList.add('hide'); setTimeout(() => toast.remove(), 300); }, 3000);
+        }
+
+        /* --- MODAL CONFIRMATION --- */
+        let confirmActionCallback = null;
+        function confirmarReset(tipo) {
+            document.getElementById('modal-msg').innerHTML = `Você está prestes a apagar <b>TODO o histórico de ${tipo.toUpperCase()}</b>.<br>Isso não pode ser desfeito. Continuar?`;
+            document.getElementById('modal-overlay').style.display = 'flex';
+            let btnConfirm = document.getElementById('modal-btn-confirm');
+            let newBtnConfirm = btnConfirm.cloneNode(true);
+            btnConfirm.parentNode.replaceChild(newBtnConfirm, btnConfirm);
+
+            newBtnConfirm.addEventListener('click', () => { 
+                localStorage.removeItem(CONFIG[tipo].key);
+                renderizarHistorico(tipo);
+                document.getElementById(`filtro-mes-hist-${tipo}`).innerHTML = '<option value="">Todos os Meses</option>';
+                if(tipo === 'cadastro') atualizarBarraProgresso();
+                showToast(`Histórico de ${tipo} limpo com sucesso!`);
+                closeModal();
+            });
+        }
+        function closeModal() { document.getElementById('modal-overlay').style.display = 'none'; }
+
+
+        /* --- INITIALIZE --- */
+        window.onload = function() {
+            atualizarBarraProgresso();
+        };
+
+        /* --- NAVEGAÇÃO PRINCIPAL E INTERNA --- */
+        function switchAppMode(mode) {
+            currentMode = mode;
+            const body = document.body;
+            document.getElementById('nav-btn-cadastro').classList.remove('active');
+            document.getElementById('nav-btn-boletos').classList.remove('active');
+            document.getElementById(`nav-btn-${mode}`).classList.add('active');
+
+            if(mode === 'cadastro') {
+                body.classList.remove('mode-boletos'); body.classList.add('mode-cadastro');
+                document.getElementById('workspace-boletos').classList.remove('active');
+                document.getElementById('workspace-cadastro').classList.add('active');
             } else {
-                body.classList.remove('mode-cadastro');
-                body.classList.add('mode-boletos');
-                titulo.innerHTML = '<span class="titulo-icon">📄</span> BOLETOS';
-                
-                if (tabId.includes('hist')) { preencherFiltroMes('boletos'); renderizarHistorico('boletos'); }
-                if (tabId.includes('count')) renderizarGrafico('boletos');
+                body.classList.remove('mode-cadastro'); body.classList.add('mode-boletos');
+                document.getElementById('workspace-cadastro').classList.remove('active');
+                document.getElementById('workspace-boletos').classList.add('active');
+            }
+            abrirAbaInterna(mode, 'input', document.querySelector(`#workspace-${mode} .sub-nav-btn`));
+        }
+
+        function abrirAbaInterna(modulo, tab, btnElement) {
+            const workspace = document.getElementById(`workspace-${modulo}`);
+            workspace.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
+            workspace.querySelectorAll('.sub-nav-btn').forEach(el => el.classList.remove('active'));
+
+            workspace.querySelector(`#${modulo}-${tab}-tab`).classList.add('active');
+            btnElement.classList.add('active');
+
+            if (tab === 'hist') { preencherFiltrosMesHist(modulo); renderizarHistorico(modulo); }
+            if (tab === 'count') { preencherFiltrosEst(modulo); setStatView(modulo, currentStatView[modulo]); }
+        }
+
+        /* --- META DIÁRIA --- */
+        function editarMeta() {
+            const atual = localStorage.getItem('meta_cadastro') || 20;
+            const novaMeta = prompt("Defina a sua meta de contratos por dia:", atual);
+            if(novaMeta && !isNaN(novaMeta) && parseInt(novaMeta) > 0) {
+                localStorage.setItem('meta_cadastro', parseInt(novaMeta));
+                atualizarBarraProgresso();
+                showToast("Meta atualizada!");
             }
         }
 
-        /* --- PROCESSAMENTO --- */
-        function processarDados(tipo) {
-            const area = document.getElementById(tipo === 'cadastro' ? 'textoCadastro' : 'textoBoletos');
-            if (area.value) { executarSeparacao(tipo); return; }
-            if (navigator.clipboard && navigator.clipboard.readText) {
-                navigator.clipboard.readText().then(txt => { area.value = txt; executarSeparacao(tipo); })
-                .catch(err => { alert("Para evitar o aviso de permissão, clique na caixa de texto e aperte Ctrl+V."); });
-            } else { alert("Use Ctrl+V dentro da caixa de texto."); }
+        function atualizarBarraProgresso() {
+            const meta = parseInt(localStorage.getItem('meta_cadastro')) || 20;
+            const hoje = getHoje();
+            const historico = getStorage(CONFIG['cadastro'].key);
+            const feitosHoje = historico.filter(i => i.data === hoje).length;
+            
+            let percent = (feitosHoje / meta) * 100;
+            let fillWidth = percent > 100 ? 100 : percent; 
+            
+            document.getElementById('progresso-fill').style.width = fillWidth + '%';
+            document.getElementById('progress-count').innerText = feitosHoje;
+
+            const metaBox = document.getElementById('meta-box-cadastro');
+            const titlePrefix = document.getElementById('meta-title-prefix');
+            const valDisplay = document.getElementById('meta-val-display');
+
+            if (feitosHoje >= meta) {
+                metaBox.classList.add('meta-success');
+                titlePrefix.innerText = "🏆 META BATIDA! (Meta: ";
+                valDisplay.innerText = meta + ")";
+                valDisplay.style.color = "#ffc107";
+            } else {
+                metaBox.classList.remove('meta-success');
+                titlePrefix.innerText = "META DIÁRIA: ";
+                valDisplay.innerText = meta;
+                valDisplay.style.color = "#4dabf7";
+            }
         }
 
-        function executarSeparacao(tipo) {
-            const txt = document.getElementById(tipo === 'cadastro' ? 'textoCadastro' : 'textoBoletos').value;
-            const resDiv = document.getElementById(tipo === 'cadastro' ? 'res-cadastro' : 'res-boletos');
+        /* --- PROCESSAMENTO MÁGICO VIA CTRL+V --- */
+        document.addEventListener('paste', function(e) {
+            const workspaceAtivo = document.getElementById(`workspace-${currentMode}`);
+            const inputTab = workspaceAtivo.querySelector(`#${currentMode}-input-tab`);
+            
+            if (inputTab.classList.contains('active')) {
+                e.preventDefault();
+                const text = (e.clipboardData || window.clipboardData).getData('text');
+                if(text) executarSeparacaoString(text, currentMode);
+            }
+        });
+
+        function executarSeparacaoString(txt, tipo) {
+            const resDiv = document.getElementById(`res-${tipo}`);
             const cfg = CONFIG[tipo];
             
-            if (!txt.trim()) { resDiv.innerHTML = ''; return; }
+            if (!txt.trim()) { return; }
 
-            // NOTA: Renderiza tabela mas NÃO salva ainda. Salva no Check.
-            
             let html = `<table id="tbl-${tipo}"><thead><tr>`;
             cfg.headers.forEach(h => html += `<th>${h}</th>`);
             html += `</tr></thead><tbody>`;
@@ -334,9 +624,9 @@
                 const cols = linha.split('\t');
                 let c = '', n = '', p = '', extraCols = [];
 
-                if (cols.length >= 10) { // Planilha
+                if (cols.length >= 10) { 
                     c = (cols[2] || '').trim(); n = (cols[3] || '').trim(); p = cols[4]; extraCols = cols;
-                } else { // Chat
+                } else { 
                     if (linha.match(/você|min/i) || linha.endsWith('!')) continue;
                     const match = linha.match(/^(\S+)\s+(.+)$/);
                     if (match) {
@@ -346,20 +636,24 @@
                     } else if (linha.match(/^[\d/R]+$/)) { tempNum = linha; }
                 }
 
-                if (c && n) {
-                    html += criarHTMLDaLinha(tipo, c, n, extraCols, rowCount);
-                    rowCount++;
-                }
+                if (c && n) { html += criarHTMLDaLinha(tipo, c, n, extraCols, rowCount); rowCount++; }
             }
-            html += '</tbody></table>';
-            resDiv.innerHTML = html;
-            atualizarDestaques(tipo);
+            
+            if (rowCount > 0) {
+                html += '</tbody></table>';
+                resDiv.innerHTML = html;
+                resDiv.classList.add('has-data');
+                atualizarDestaques(tipo);
+                showToast(`${rowCount} dados lidos com sucesso!`);
+            } else {
+                showToast("Não foi possível identificar dados neste texto.", "warning");
+            }
         }
 
         function criarHTMLDaLinha(tipo, c, n, cols, index) {
             let rowId = `row-${tipo}-${index}`;
             let row = `<tr id="${rowId}" class="data-row">
-                <td><input type="checkbox" class="chk" onchange="chkClick(this)"></td>
+                <td><label class="custom-cb"><input type="checkbox" class="chk" onchange="chkClick(this)"><span class="checkmark"></span></label></td>
                 <td><button class="copy-button" onclick="copiar(this)">${c}</button></td>
                 <td><button class="copy-button" onclick="copiar(this)">${n}</button></td>
                 <td><button class="copy-button" onclick="copiar(this)">${cols[4]||''}</button></td>`;
@@ -380,40 +674,33 @@
             return row;
         }
 
-        /* --- SALVAR NO HISTÓRICO --- */
         function salvarLinhaNoHistorico(tipo, trElement) {
             const cells = trElement.querySelectorAll('td');
             const c = cells[1].innerText;
             const n = cells[2].innerText;
             const p = cells[3].innerText;
             
-            let obj = { contrato: c, nome: n, processo: p, data: getHoje() };
+            let obj = { contrato: c, nome: n, processo: p, data: getHoje(), hora: getHoraAtual() };
             if (tipo === 'cadastro') {
                 obj.dt = cells[4].innerText; obj.val = cells[5].innerText; obj.adv = cells[6].innerText; obj.veic = cells[7].innerText;
             }
 
             const historico = getStorage(CONFIG[tipo].key);
-            // Verifica duplicidade no dia para não salvar repetido se desmarcar e marcar de novo
             const jaExiste = historico.some(item => item.contrato === c && item.data === getHoje());
-            
-            if (!jaExiste) {
-                historico.push(obj);
-                setStorage(CONFIG[tipo].key, historico);
+            if (!jaExiste) { 
+                historico.push(obj); 
+                setStorage(CONFIG[tipo].key, historico); 
+                if(tipo === 'cadastro') atualizarBarraProgresso(); 
             }
         }
 
-        /* --- WORKFLOW --- */
+        /* --- WORKFLOW DE CHECKBOX --- */
         function chkClick(chk) {
             const tr = chk.closest('tr');
-            const tipo = chk.closest('div').id.includes('cadastro') ? 'cadastro' : 'boletos';
+            const tipo = currentMode;
             
-            if (chk.checked) {
-                tr.classList.add('linha-selecionada');
-                tr.classList.remove('linha-destaque');
-                salvarLinhaNoHistorico(tipo, tr); // Salva ao marcar
-            } else {
-                tr.classList.remove('linha-selecionada');
-            }
+            if (chk.checked) { tr.classList.add('linha-selecionada'); tr.classList.remove('linha-destaque'); salvarLinhaNoHistorico(tipo, tr); } 
+            else { tr.classList.remove('linha-selecionada'); }
 
             if (tipo === 'cadastro') {
                 const detailsRow = document.getElementById(tr.id + '-details');
@@ -430,18 +717,14 @@
             
             if (mainChk.checked !== allChecked) {
                 mainChk.checked = allChecked;
-                if (allChecked) {
-                    mainRow.classList.add('linha-selecionada');
-                    salvarLinhaNoHistorico('cadastro', mainRow); // Salva ao completar sub-tarefas
-                } else {
-                    mainRow.classList.remove('linha-selecionada');
-                }
+                if (allChecked) { mainRow.classList.add('linha-selecionada'); salvarLinhaNoHistorico('cadastro', mainRow); } 
+                else { mainRow.classList.remove('linha-selecionada'); }
             }
             atualizarDestaques('cadastro');
         }
 
         function atualizarDestaques(tipo) {
-            const divId = tipo === 'cadastro' ? 'res-cadastro' : 'res-boletos';
+            const divId = `res-${tipo}`;
             const trs = document.querySelectorAll(`#${divId} tbody tr.data-row`);
             trs.forEach(tr => {
                 if (!tr.querySelector('.chk').checked) tr.classList.remove('linha-destaque');
@@ -458,24 +741,25 @@
         }
 
         function marcarTodos(tipo) {
-            const divId = tipo === 'cadastro' ? 'res-cadastro' : 'res-boletos';
+            const divId = `res-${tipo}`;
             const chks = document.querySelectorAll(`#${divId} .data-row .chk`);
             const status = !Array.from(chks).every(c => c.checked);
             chks.forEach(c => { if (c.checked !== status) { c.checked = status; chkClick(c); } });
-            document.getElementById(tipo === 'cadastro' ? 'btn-toggle-cadastro' : 'btn-toggle-boletos').textContent = status ? 'Desmarcar Todos' : 'Marcar Todos';
+            document.getElementById(`btn-toggle-${tipo}`).textContent = status ? 'Desmarcar Todos' : 'Marcar Todos';
         }
 
         function copiar(btn) {
             const txt = btn.textContent;
             navigator.clipboard.writeText(txt).then(() => {
+                showToast(`Copiado: ${txt}`);
                 const cor = btn.style.color; const sombra = btn.style.textShadow;
-                btn.textContent = "COPIADO!"; btn.style.color = "#28a745"; btn.style.textShadow = "0 0 10px rgba(40,167,69,0.5)"; btn.style.fontWeight = "bold";
-                setTimeout(() => { btn.textContent = txt; btn.style.color = cor; btn.style.textShadow = sombra; btn.style.fontWeight = "normal"; }, 1000);
+                btn.style.color = "#28a745"; btn.style.textShadow = "0 0 10px rgba(40,167,69,0.5)"; btn.style.fontWeight = "bold";
+                setTimeout(() => { btn.style.color = cor; btn.style.textShadow = sombra; btn.style.fontWeight = "normal"; }, 800);
             });
         }
 
         function copiarSelecionados(tipo) {
-            const divId = tipo === 'cadastro' ? 'res-cadastro' : 'res-boletos';
+            const divId = `res-${tipo}`;
             const chks = document.querySelectorAll(`#${divId} .data-row .chk:checked`);
             let txt = '';
             chks.forEach(chk => {
@@ -484,27 +768,24 @@
                 tr.querySelectorAll('td:not(:first-child)').forEach(td => rowTxt.push(td.innerText));
                 txt += rowTxt.join('\t') + '\n';
             });
-            if(txt) navigator.clipboard.writeText(txt).then(() => {
-                const btn = document.getElementById(tipo==='cadastro'?'btn-copy-cadastro':'btn-copy-boletos');
-                const orig = btn.textContent; btn.textContent = "COPIADO!";
-                const cls = tipo==='cadastro'?'btn-cad':'btn-bol';
-                btn.classList.remove(cls); btn.style.background='#28a745'; btn.style.boxShadow='0 0 15px rgba(40,167,69,0.6)';
-                setTimeout(() => { btn.textContent = orig; btn.style.background=''; btn.style.boxShadow=''; btn.classList.add(cls); }, 1000);
-            }); else alert('Nada selecionado.');
+            if(txt) navigator.clipboard.writeText(txt).then(() => { showToast(`${chks.length} linhas copiadas!`); })
+            else showToast('Selecione algo primeiro.', 'warning');
         }
 
         function limpar(tipo) {
-            document.getElementById(tipo === 'cadastro' ? 'textoCadastro' : 'textoBoletos').value = '';
-            document.getElementById(tipo === 'cadastro' ? 'res-cadastro' : 'res-boletos').innerHTML = '';
+            const resDiv = document.getElementById(`res-${tipo}`);
+            resDiv.innerHTML = ''; resDiv.classList.remove('has-data'); showToast('Tabela limpa.');
         }
 
-        /* --- FILTROS, HISTÓRICO E RESET --- */
-        function preencherFiltroMes(tipo) {
-            const select = document.getElementById(`filtro-mes-${tipo}`);
+        /* --- FILTROS DE HISTÓRICO E EMPTY STATE --- */
+        function preencherFiltrosMesHist(tipo) {
+            const select = document.getElementById(`filtro-mes-hist-${tipo}`);
+            if(!select) return;
             const dados = getStorage(CONFIG[tipo].key);
             const valorAtual = select.value;
-            const meses = new Set(dados.map(item => item.data.substring(0, 7)));
+            const meses = new Set(dados.map(item => item.data.substring(0, 7))); 
             const mesesOrdenados = Array.from(meses).sort().reverse();
+            
             select.innerHTML = '<option value="">Todos os Meses</option>';
             mesesOrdenados.forEach(mes => {
                 const [ano, numMes] = mes.split('-');
@@ -512,50 +793,261 @@
                 const label = `${nomeMes.charAt(0).toUpperCase() + nomeMes.slice(1)} / ${ano}`;
                 const option = document.createElement('option'); option.value = mes; option.textContent = label; select.appendChild(option);
             });
-            if (valorAtual) select.value = valorAtual;
+
+            const mesAtual = getHoje().substring(0,7);
+            if (!valorAtual && mesesOrdenados.includes(mesAtual)) { select.value = mesAtual; } 
+            else if (!valorAtual && mesesOrdenados.length > 0) { select.value = ""; } 
+            else { select.value = valorAtual; }
         }
 
         function renderizarHistorico(tipo) {
-            const div = document.getElementById(tipo === 'cadastro' ? 'lista-cadastro' : 'lista-boletos');
-            const filtroMes = document.getElementById(`filtro-mes-${tipo}`).value;
+            const div = document.getElementById(`lista-${tipo}`);
+            const filtroMes = document.getElementById(`filtro-mes-hist-${tipo}`).value;
             const dados = getStorage(CONFIG[tipo].key);
             const dadosFiltrados = filtroMes ? dados.filter(item => item.data.startsWith(filtroMes)) : dados;
-            if (dadosFiltrados.length === 0) { div.innerHTML = '<p>Vazio</p>'; return; }
-            div.innerHTML = dadosFiltrados.slice().reverse().map(d => `<div class="historico-item"><small>${d.data}</small> <strong style="color:${tipo==='cadastro'?'#4dabf7':'#28a745'}">${d.contrato}</strong> ${d.nome}</div>`).join('');
-        }
-
-        function resetarHistorico(tipo) {
-            if (confirm(`ATENÇÃO: Deseja apagar TODO o histórico de ${tipo.toUpperCase()}?\nIsso não pode ser desfeito.`)) {
-                localStorage.removeItem(CONFIG[tipo].key);
-                renderizarHistorico(tipo);
-                // Reseta dropdown
-                document.getElementById(`filtro-mes-${tipo}`).innerHTML = '<option value="">Todos os Meses</option>';
-                alert('Histórico limpo.');
-            }
-        }
-
-        let chartInstance = null;
-        function renderizarGrafico(tipo) {
-            const ctx = document.getElementById(tipo === 'cadastro' ? 'chart-cadastro' : 'chart-boletos');
-            if (!ctx || typeof Chart === 'undefined') return;
-            const dados = getStorage(CONFIG[tipo].key);
-            const mapa = {};
-            dados.forEach(d => { if(!mapa[d.data]) mapa[d.data] = new Set(); mapa[d.data].add(d.contrato); });
-            const labels = Object.keys(mapa).sort();
-            const values = labels.map(l => mapa[l].size);
-            document.getElementById(tipo === 'cadastro' ? 'txt-count-cadastro' : 'txt-count-boletos').innerHTML = labels.map((l, i) => `<b>${l}:</b> ${values[i]}`).join(' | ');
-            if (chartInstance) chartInstance.destroy();
-            chartInstance = new Chart(ctx, { type: 'bar', data: { labels: labels, datasets: [{ label: 'Contratos Únicos', data: values, backgroundColor: tipo === 'cadastro' ? '#007bff' : '#28a745' }] }, options: { responsive: true, maintainAspectRatio: false } });
+            
+            if (dadosFiltrados.length === 0) { div.innerHTML = `<div class="empty-state"><span>📭</span><p>Nenhum dado encontrado para o período.</p></div>`; return; }
+            
+            div.innerHTML = dadosFiltrados.slice().reverse().map(d => 
+                `<div class="historico-item"><small>${formatarDataBR(d.data)} <span class="time-badge">${d.hora || '--:--'}</span></small> <strong style="color:${tipo==='cadastro'?'#4dabf7':'#28a745'}; flex-shrink:0;">${d.contrato}</strong> <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${d.nome}</span></div>`
+            ).join('');
         }
 
         function baixarCSV(tipo) {
-            const filtroMes = document.getElementById(`filtro-mes-${tipo}`).value;
+            const filtroMes = document.getElementById(`filtro-mes-hist-${tipo}`).value;
             const dados = getStorage(CONFIG[tipo].key);
             const dadosExportar = filtroMes ? dados.filter(item => item.data.startsWith(filtroMes)) : dados;
-            if (!dadosExportar.length) return alert('Sem dados.');
-            let csv = "Data;Contrato;Nome;Processo\n";
-            dadosExportar.forEach(d => { csv += `${d.data};${d.contrato};${d.nome};${d.processo||''}\n`; });
+            if (!dadosExportar.length) { showToast('Sem dados para exportar nesse período.', 'error'); return; }
+            let csv = "Data;Hora;Contrato;Nome;Processo\n";
+            dadosExportar.forEach(d => { csv += `${formatarDataBR(d.data)};${d.hora || ''};${d.contrato};${d.nome};${d.processo||''}\n`; });
             const a = document.createElement('a'); a.href = 'data:text/csv;charset=utf-8,' + encodeURI(csv); a.download = `Relatorio_${tipo}${filtroMes ? '_'+filtroMes : ''}.csv`; a.click();
+        }
+
+        /* --- DASHBOARD ESTATÍSTICAS --- */
+        function preencherFiltrosEst(tipo) {
+            const dados = getStorage(CONFIG[tipo].key);
+            
+            const selMes = document.getElementById(`filtro-mes-est-${tipo}`);
+            if(selMes) {
+                const valorAtualMes = selMes.value;
+                const meses = new Set(dados.map(item => item.data.substring(0, 7))); 
+                const mesesOrdenados = Array.from(meses).sort().reverse();
+                selMes.innerHTML = '<option value="">Mês Atual</option>';
+                mesesOrdenados.forEach(mes => {
+                    const [ano, numMes] = mes.split('-');
+                    const nomeMes = new Date(ano, numMes - 1).toLocaleString('pt-BR', { month: 'long' });
+                    const label = `${nomeMes.charAt(0).toUpperCase() + nomeMes.slice(1)} / ${ano}`;
+                    const option = document.createElement('option'); option.value = mes; option.textContent = label; selMes.appendChild(option);
+                });
+                if (valorAtualMes) selMes.value = valorAtualMes;
+            }
+
+            const selSemana = document.getElementById(`filtro-semana-est-${tipo}`);
+            if(selSemana) {
+                const valorAtualSemana = selSemana.value;
+                let domingos = new Set();
+                dados.forEach(item => {
+                    let d = new Date(item.data + "T12:00:00");
+                    d.setDate(d.getDate() - d.getDay()); 
+                    domingos.add(d.toISOString().split('T')[0]);
+                });
+                const domingosOrdenados = Array.from(domingos).sort().reverse();
+                selSemana.innerHTML = '<option value="">Semana Atual</option>';
+                domingosOrdenados.forEach(domISO => {
+                    let dDom = new Date(domISO + "T12:00:00");
+                    let dSab = new Date(domISO + "T12:00:00"); dSab.setDate(dSab.getDate() + 6);
+                    let label = `${formatarDataBR(domISO)} a ${formatarDataBR(dSab.toISOString().split('T')[0])}`; 
+                    const option = document.createElement('option'); option.value = domISO; option.textContent = label; selSemana.appendChild(option);
+                });
+                if (valorAtualSemana) selSemana.value = valorAtualSemana;
+            }
+        }
+
+        function setStatView(tipo, view) {
+            currentStatView[tipo] = view;
+            document.getElementById(`btn-${tipo.substring(0,3)}-week`).classList.remove('active');
+            document.getElementById(`btn-${tipo.substring(0,3)}-month`).classList.remove('active');
+            document.getElementById(`btn-${tipo.substring(0,3)}-year`).classList.remove('active');
+            if(view !== 'custom_week' && view !== 'custom_month') { document.getElementById(`btn-${tipo.substring(0,3)}-${view}`).classList.add('active'); }
+
+            const selSemana = document.getElementById(`filtro-semana-est-${tipo}`);
+            const selMes = document.getElementById(`filtro-mes-est-${tipo}`);
+
+            if (view === 'week' || view === 'custom_week') { selSemana.style.display = 'inline-block'; selMes.style.display = 'none'; if(view === 'week') selSemana.value = ""; } 
+            else if (view === 'month' || view === 'custom_month') { selSemana.style.display = 'none'; selMes.style.display = 'inline-block'; if(view === 'month') selMes.value = ""; } 
+            else if (view === 'year') { selSemana.style.display = 'none'; selMes.style.display = 'none'; }
+            renderizarGrafico(tipo);
+        }
+
+        function onSelectMonthEst(tipo) {
+            const selSemana = document.getElementById(`filtro-semana-est-${tipo}`);
+            const selMes = document.getElementById(`filtro-mes-est-${tipo}`);
+            if(selSemana.style.display !== 'none') { if(selSemana.value) setStatView(tipo, 'custom_week'); else setStatView(tipo, 'week'); } 
+            else { if(selMes.value) setStatView(tipo, 'custom_month'); else setStatView(tipo, 'month'); }
+        }
+
+        const chartDataLabelsPlugin = {
+            id: 'chartDataLabelsPlugin',
+            afterDatasetsDraw(chart, args, pluginOptions) {
+                const { ctx, data } = chart;
+                ctx.save();
+                ctx.font = 'bold 15px "Inter", sans-serif';
+                ctx.fillStyle = '#fff';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'bottom';
+                chart.getDatasetMeta(0).data.forEach((datapoint, index) => {
+                    const value = data.datasets[0].data[index];
+                    if (value > 0) ctx.fillText(value, datapoint.x, datapoint.y - 8); 
+                });
+                ctx.restore();
+            }
+        };
+
+        let chartCadastro = null;
+        let chartBoletos = null;
+
+        function renderizarGrafico(tipo) {
+            const ctxId = `chart-${tipo}`;
+            const ctx = document.getElementById(ctxId);
+            if (!ctx || typeof Chart === 'undefined') return;
+
+            const view = currentStatView[tipo];
+            const dadosBrutos = getStorage(CONFIG[tipo].key);
+            const hoje = new Date();
+            let dataFiltrada = [];
+            let labelsTarget = []; 
+            let titleText = "";
+
+            if (view === 'week' || view === 'custom_week') {
+                let domString = document.getElementById(`filtro-semana-est-${tipo}`).value;
+                let dom = new Date();
+                if (domString) { dom = new Date(domString + "T12:00:00"); } else { dom.setDate(dom.getDate() - dom.getDay()); }
+                dom.setHours(0,0,0,0);
+                for(let i=0; i<7; i++) { let d = new Date(dom); d.setDate(d.getDate() + i); labelsTarget.push(d.toISOString().split('T')[0]); }
+                dataFiltrada = dadosBrutos.filter(d => d.data >= labelsTarget[0] && d.data <= labelsTarget[6]);
+                titleText = `- Semana (${formatarDataBR(labelsTarget[0])} a ${formatarDataBR(labelsTarget[6])})`;
+
+            } else if (view === 'month' || view === 'custom_month') {
+                let mesString = document.getElementById(`filtro-mes-est-${tipo}`).value;
+                let ano, mes;
+                if (mesString) { [ano, mes] = mesString.split('-'); } else { ano = hoje.getFullYear(); mes = String(hoje.getMonth() + 1).padStart(2, '0'); }
+                let diasNoMes = new Date(ano, mes, 0).getDate();
+                for(let i=1; i<=diasNoMes; i++) { labelsTarget.push(`${ano}-${mes}-${String(i).padStart(2,'0')}`); }
+                dataFiltrada = dadosBrutos.filter(d => d.data.startsWith(`${ano}-${mes}`));
+                const nomeMes = new Date(ano, mes - 1).toLocaleString('pt-BR', { month: 'long' });
+                titleText = `- ${nomeMes.charAt(0).toUpperCase() + nomeMes.slice(1)} de ${ano}`;
+
+            } else if (view === 'year') {
+                let ano = hoje.getFullYear();
+                for(let i=1; i<=12; i++) { labelsTarget.push(`${ano}-${String(i).padStart(2,'0')}`); }
+                dataFiltrada = dadosBrutos.filter(d => d.data.startsWith(`${ano}-`));
+                titleText = `- Visão Anual (${ano})`;
+            }
+
+            const tituloTipo = tipo === 'cadastro' ? 'Estatísticas de Cadastro' : 'Estatísticas de Boletos';
+            document.getElementById(`est-title-${tipo}`).innerText = `${tituloTipo} ${titleText}`;
+
+            let valuesMapped = [];
+            let labelsDisplay = [];
+            let countsPorDia = {}; 
+
+            if (view === 'year') {
+                let mesesCount = {};
+                dataFiltrada.forEach(d => { let m = d.data.substring(0,7); mesesCount[m] = (mesesCount[m] || 0) + 1; countsPorDia[d.data] = (countsPorDia[d.data] || 0) + 1; });
+                labelsTarget.forEach((prefix, i) => {
+                    valuesMapped.push(mesesCount[prefix] || 0);
+                    let mName = new Date(hoje.getFullYear(), i).toLocaleString('pt-BR', { month: 'short' });
+                    labelsDisplay.push(mName.charAt(0).toUpperCase() + mName.slice(1));
+                });
+            } else {
+                dataFiltrada.forEach(d => { countsPorDia[d.data] = (countsPorDia[d.data] || 0) + 1; });
+                labelsTarget.forEach(dateISO => {
+                    valuesMapped.push(countsPorDia[dateISO] || 0);
+                    let dObj = new Date(dateISO + "T12:00:00");
+                    if (view === 'week' || view === 'custom_week') { labelsDisplay.push(`${diasSemana[dObj.getDay()]}, ${formatarDataCurta(dateISO)}`); } 
+                    else { labelsDisplay.push(formatarDataCurta(dateISO)); }
+                });
+            }
+
+            let diasTrabalhados = Object.keys(countsPorDia).length;
+            let totalPeriodo = dataFiltrada.length;
+            let media = diasTrabalhados > 0 ? (totalPeriodo / diasTrabalhados).toFixed(1) : '0';
+            let maxDia = diasTrabalhados > 0 ? Math.max(...Object.values(countsPorDia)) : 0;
+            
+            document.getElementById(`avg-${tipo}`).innerText = media;
+            document.getElementById(`max-${tipo}`).innerText = maxDia;
+            document.getElementById(`total-${tipo}`).innerText = totalPeriodo;
+
+            let breakdownContainer = document.getElementById(`weekly-breakdown-${tipo}`);
+            if (view === 'month' || view === 'custom_month') {
+                let [anoStr, mesStr] = labelsTarget[0].split('-');
+                let anoInt = parseInt(anoStr, 10); let mesInt = parseInt(mesStr, 10) - 1; 
+                let primeiroDia = new Date(anoInt, mesInt, 1);
+                let ultimoDia = new Date(anoInt, mesInt + 1, 0);
+                
+                let primeiroDom = new Date(primeiroDia); primeiroDom.setDate(primeiroDia.getDate() - primeiroDia.getDay());
+                let ultimoSab = new Date(ultimoDia); ultimoSab.setDate(ultimoDia.getDate() + (6 - ultimoDia.getDay()));
+                
+                let semanasCal = [];
+                let cur = new Date(primeiroDom.getFullYear(), primeiroDom.getMonth(), primeiroDom.getDate(), 12, 0, 0);
+                let fimLoop = new Date(ultimoSab.getFullYear(), ultimoSab.getMonth(), ultimoSab.getDate(), 12, 0, 0);
+                
+                while (cur <= fimLoop) {
+                    let fim = new Date(cur); fim.setDate(cur.getDate() + 6);
+                    semanasCal.push({ inicioStr: cur.toISOString().split('T')[0], fimStr: fim.toISOString().split('T')[0], total: 0 });
+                    cur.setDate(cur.getDate() + 7);
+                }
+
+                dadosBrutos.forEach(d => {
+                    let dStr = d.data;
+                    for (let i = 0; i < semanasCal.length; i++) {
+                        if (dStr >= semanasCal[i].inicioStr && dStr <= semanasCal[i].fimStr) { semanasCal[i].total++; break; }
+                    }
+                });
+
+                let html = '';
+                semanasCal.forEach((sem, i) => { html += `<div class="metric-box mini"><span>SEMANA ${formatarDataCurta(sem.inicioStr)} A ${formatarDataCurta(sem.fimStr)}</span><strong>${sem.total}</strong></div>`; });
+                breakdownContainer.innerHTML = html; breakdownContainer.style.display = 'flex';
+            } else { breakdownContainer.style.display = 'none'; }
+
+            let activeChart = tipo === 'cadastro' ? chartCadastro : chartBoletos;
+            if (activeChart) activeChart.destroy();
+            
+            const novoChart = new Chart(ctx, { 
+                type: 'bar', 
+                data: { labels: labelsDisplay, datasets: [{ data: valuesMapped, backgroundColor: tipo === 'cadastro' ? '#007bff' : '#28a745', borderRadius: 6, maxBarThickness: 60 }] }, 
+                options: { 
+                    responsive: true, 
+                    maintainAspectRatio: false, 
+                    layout: { padding: { top: 35, bottom: 20 } }, 
+                    plugins: { legend: { display: false } }, 
+                    scales: { 
+                        y: { display: false, beginAtZero: true, grace: '20%' }, 
+                        x: { grid: { display: false }, ticks: { color: '#888', font: {family: "'Inter', sans-serif", size: 11} } } 
+                    } 
+                },
+                plugins: [chartDataLabelsPlugin]
+            });
+            if(tipo === 'cadastro') chartCadastro = novoChart; else chartBoletos = novoChart;
+        }
+
+        function baixarImagemEstatisticas(tipo) {
+            const elemento = document.getElementById(`export-container-${tipo}`);
+            showToast("Gerando relatório em imagem... 📸");
+            
+            html2canvas(elemento, { 
+                backgroundColor: '#1a1a1a', 
+                scale: 2, 
+                ignoreElements: function(el) { return el.classList.contains('hide-on-print-only'); }
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = `Estatisticas_${tipo}_${getHoje()}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            }).catch(err => {
+                showToast("Falha ao gerar a imagem.", "error");
+                console.error(err);
+            });
         }
     </script>
 </body>
