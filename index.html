@@ -16,20 +16,10 @@
     <style>
         /* --- ESTILOS GERAIS --- */
         body { 
-            font-family: 'Inter', sans-serif; 
-            background-color: #0d0d0d; 
-            color: #e0e0e0; 
-            margin: 0; 
-            padding: 15px 20px; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            transition: background-color 0.5s ease; 
-            height: 100vh; 
-            box-sizing: border-box;
-            overflow: hidden; 
+            font-family: 'Inter', sans-serif; background-color: #0d0d0d; color: #e0e0e0; 
+            margin: 0; padding: 15px 20px; display: flex; flex-direction: column; align-items: center; 
+            transition: background-color 0.5s ease; height: 100vh; box-sizing: border-box; overflow: hidden; 
         }
-        
         ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-track { background: #1a1a1a; border-radius: 4px; }
         ::-webkit-scrollbar-thumb { background: #444; border-radius: 4px; }
@@ -37,56 +27,44 @@
 
         /* --- TELA DE LOGIN --- */
         #login-screen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #0d0d0d; z-index: 20000;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            transition: opacity 0.5s ease;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0d0d0d; z-index: 20000;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.5s ease;
         }
         .login-box {
-            background: #1a1a1a; padding: 40px; border-radius: 16px; border: 1px solid #333;
-            text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.8); max-width: 350px;
+            background: #1a1a1a; padding: 40px; border-radius: 16px; border: 1px solid #333; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.8); max-width: 350px; width: 90%;
         }
         .login-box h2 { font-size: 24px; margin-bottom: 10px; color: #fff; }
         .login-box p { color: #888; font-size: 14px; margin-bottom: 30px; line-height: 1.5; }
+        
         .btn-google {
-            background: #fff; color: #333; font-family: 'Inter', sans-serif; font-weight: 700;
-            padding: 12px 20px; border: none; border-radius: 8px; cursor: pointer;
-            display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%;
-            font-size: 14px; transition: 0.2s; box-shadow: 0 4px 15px rgba(255,255,255,0.1);
+            background: #fff; color: #333; font-family: 'Inter', sans-serif; font-weight: 700; padding: 12px 20px; border: none; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; font-size: 14px; transition: 0.2s; box-shadow: 0 4px 15px rgba(255,255,255,0.1); margin-bottom: 5px;
         }
         .btn-google:hover { background: #eee; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(255,255,255,0.2); }
-        .btn-google img { width: 20px; height: 20px; }
+        .btn-google img, .btn-google svg { width: 20px; height: 20px; }
 
-        /* --- CABEÇALHO DO USUÁRIO LOGADO --- */
-        .user-header {
-            position: absolute; top: 20px; right: 25px; display: none; align-items: center; gap: 12px; z-index: 100;
-        }
+        /* --- CABEÇALHO DO USUÁRIO --- */
+        .user-header { position: absolute; top: 20px; right: 25px; display: none; align-items: center; gap: 12px; z-index: 100; }
         .user-header.visible { display: flex; }
         .user-info { display: flex; flex-direction: column; align-items: flex-end; }
         .user-name { font-size: 13px; font-weight: 700; color: #fff; }
         .btn-logout { background: transparent; border: none; color: #888; font-size: 11px; cursor: pointer; padding: 0; text-decoration: underline; }
         .btn-logout:hover { color: #dc3545; }
-        .user-avatar { width: 36px; height: 36px; border-radius: 50%; border: 2px solid #444; }
+        .user-avatar { width: 36px; height: 36px; border-radius: 50%; border: 2px solid #444; background: #333;}
 
-        /* Container Principal Dinâmico */
+        /* --- CONTAINER PRINCIPAL --- */
         .container { 
-            background-color: #1a1a1a; padding: 15px 25px; border-radius: 12px; 
-            box-shadow: 0 10px 40px rgba(0,0,0,0.6); width: 100%; max-width: 1400px; 
-            flex: 1; min-height: 0; display: none; flex-direction: column; /* Oculto até logar */
-            border: 1px solid #333; border-top-width: 6px; box-sizing: border-box;
-            transition: border-color 0.4s, box-shadow 0.4s; position: relative;
+            background-color: #1a1a1a; padding: 15px 25px; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.6); width: 100%; max-width: 1400px; flex: 1; min-height: 0; display: none; flex-direction: column; border: 1px solid #333; border-top-width: 6px; box-sizing: border-box; transition: border-color 0.4s, box-shadow 0.4s; position: relative;
         }
         .container.visible { display: flex; animation: fadeIn 0.6s ease forwards; }
 
         h2 { color: #fff; margin-top: 0; margin-bottom: 10px; font-weight: 700; letter-spacing: 1px; font-size: 20px;}
 
-        /* --- NAVEGAÇÃO PRINCIPAL (MÓDULOS) --- */
+        /* --- NAVEGAÇÃO --- */
         .main-nav { display: flex; justify-content: center; gap: 15px; margin-bottom: 15px; align-self: center; flex-shrink: 0; }
         .main-nav-btn { font-family: 'Inter', sans-serif; background-color: #2a2a2a; border: 1px solid transparent; color: #ccc; padding: 10px 0; font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; border-radius: 8px; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; align-items: center; justify-content: center; gap: 8px; width: 170px; }
         .main-nav-btn:hover { color: #fff; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
         .main-nav-btn:active { transform: scale(0.97); box-shadow: none !important; }
         
-        /* --- NAVEGAÇÃO INTERNA (ABAS) --- */
         .sub-nav { display: flex; gap: 10px; margin-bottom: 15px; border-bottom: 2px solid #222; padding-bottom: 8px; flex-shrink: 0; }
         .sub-nav-btn { font-family: 'Inter', sans-serif; background: transparent; border: none; color: #888; font-size: 12px; font-weight: 600; text-transform: uppercase; padding: 8px 15px; cursor: pointer; transition: 0.3s; position: relative; }
         .sub-nav-btn:hover { color: #fff; }
@@ -94,7 +72,7 @@
         .sub-nav-btn.active::after { transform: scaleX(1); }
         .sub-nav-btn.active { color: #fff; font-weight: 800; }
 
-        /* --- WORKSPACES E TRANSIÇÕES FLEX --- */
+        /* --- WORKSPACES --- */
         .workspace { display: none; flex-direction: column; flex: 1; min-height: 0; animation: fadeIn 0.4s ease forwards; }
         .workspace.active { display: flex; }
         .tab-pane { display: none; width: 100%; flex-direction: column; flex: 1; min-height: 0; animation: slideUp 0.3s ease forwards; }
@@ -102,7 +80,6 @@
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* --- MODOS VISUAIS E CORES DOS BOTÕES DO MENU --- */
         .mode-cadastro .container { border-top-color: #007bff; box-shadow: 0 0 40px rgba(0, 123, 255, 0.12); }
         .mode-cadastro .main-nav-btn.active { background: linear-gradient(180deg, #0056b3, #004494); color: white; border-color: #004494; box-shadow: 0 4px 15px rgba(0, 123, 255, 0.4); }
         .mode-cadastro .sub-nav-btn.active::after { background: #007bff; }
@@ -110,7 +87,7 @@
         .mode-boletos .main-nav-btn.active { background: linear-gradient(180deg, #1e7e34, #155724); color: white; border-color: #155724; box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4); }
         .mode-boletos .sub-nav-btn.active::after { background: #28a745; }
 
-        /* --- META VISUAL (GAMIFICAÇÃO) --- */
+        /* --- COMPONENTES --- */
         .meta-container { background: rgba(255,255,255,0.03); padding: 12px 20px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #333; transition: all 0.5s ease; position: relative; overflow: hidden; flex-shrink: 0; }
         .meta-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; position: relative; z-index: 2; }
         .meta-text-title { font-size: 13px; font-weight: 800; color: #fff; letter-spacing: 0.5px; display: flex; align-items: center; }
@@ -119,19 +96,14 @@
         .btn-meta:hover { background: #444; color: #fff; border-color: #4dabf7; }
         .progress-bar-bg { width: 100%; height: 12px; background: #111; border-radius: 8px; overflow: hidden; box-shadow: inset 0 2px 5px rgba(0,0,0,0.8); position: relative; z-index: 2; }
         .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #0056b3, #00d4ff); width: 0%; transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 0 15px rgba(0, 123, 255, 0.5); }
-        .meta-success { border-color: #ffc107; box-shadow: 0 0 30px rgba(255, 193, 7, 0.15); background: rgba(255, 193, 7, 0.05); }
-        .meta-success .progress-bar-fill { background: linear-gradient(90deg, #ffc107, #ffe066); box-shadow: 0 0 20px rgba(255, 193, 7, 0.6); }
-
-        /* --- SMART PASTE ZONE --- */
+        
         .smart-paste-zone { border: 2px dashed #444; border-radius: 12px; padding: 15px; text-align: center; background-color: #151515; cursor: pointer; transition: all 0.3s ease; margin-bottom: 15px; outline: none; display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 80px; flex-shrink: 0; }
         .mode-cadastro .smart-paste-zone:hover, .mode-cadastro .smart-paste-zone:focus { border-color: #007bff; background-color: #1a1a1a; box-shadow: 0 0 15px rgba(0,123,255,0.1); }
         .mode-boletos .smart-paste-zone:hover, .mode-boletos .smart-paste-zone:focus { border-color: #28a745; background-color: #1a1a1a; box-shadow: 0 0 15px rgba(40,167,69,0.1); }
         .paste-icon { font-size: 20px; margin-bottom: 5px; opacity: 0.8; }
         .smart-paste-zone h3 { margin: 0 0 4px 0; color: #fff; font-size: 15px; font-weight: 700; }
         .smart-paste-zone p { margin: 0; color: #888; font-size: 12px; }
-        .btn-colar-separar { display: none; } 
 
-        /* --- BOTÕES --- */
         .button-group { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; justify-content: center; flex-shrink: 0;}
         button { font-family: 'Inter', sans-serif; padding: 10px 20px; color: #ccc; border: 1px solid transparent; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; transition: all 0.2s ease; background-color: #2a2a2a; }
         button:hover { color: white; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
@@ -147,7 +119,7 @@
         .btn-reset { background: linear-gradient(180deg, #5c0000, #3d0000); color: #ff9999; border: 1px solid #5c0000; white-space: nowrap; }
         .btn-reset:hover { background: linear-gradient(180deg, #8a0000, #5c0000); color: white; box-shadow: 0 0 15px rgba(255, 0, 0, 0.2); }
 
-        /* --- FILTROS --- */
+        /* --- FILTROS E ESTATÍSTICAS --- */
         .filter-controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; gap: 15px; width: 100%; flex-wrap: wrap; flex-shrink: 0;}
         .filter-left { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
         .month-select { font-family: 'Inter', sans-serif; padding: 8px 12px; border-radius: 6px; background-color: #111; color: #fff; border: 1px solid #444; font-size: 12px; font-weight: 600; outline: none; cursor: pointer; }
@@ -157,8 +129,7 @@
         .mode-cadastro .stat-btn.active { background: #0056b3; color: #fff; }
         .mode-boletos .stat-btn.active { background: #1e7e34; color: #fff; }
         
-        /* --- DASHBOARD ESTATÍSTICAS --- */
-        .export-container { padding: 15px 20px; border-radius: 12px; background-color: #1a1a1a; border: 1px solid transparent; display: flex; flex-direction: column; flex: 1; min-height: 0; }
+        .export-container { padding: 15px 20px; border-radius: 12px; background-color: #1a1a1a; border: 1px solid transparent; display: flex; flex-direction: column; flex: 1; min-height: 0; overflow-y: auto;}
         .export-header { display: flex; flex-direction: column; align-items: flex-start; margin-bottom: 10px; border-bottom: 1px solid #333; padding-bottom: 10px; flex-shrink: 0;}
         .export-controls { display: flex; justify-content: space-between; align-items: center; width: 100%; margin-top: 10px; }
         .export-controls-left { display: flex; gap: 10px; align-items: center; }
@@ -166,16 +137,27 @@
         .metric-box { background: rgba(255,255,255,0.03); padding: 12px; border-radius: 8px; border: 1px solid #333; text-align: center; display: flex; flex-direction: column; gap: 5px; min-width: 130px; flex: 1; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
         .metric-box span { font-size: 10px; color: #888; text-transform: uppercase; letter-spacing: 1px; font-weight: 700;}
         .metric-box strong { font-size: 26px; color: #fff; font-weight: 800; line-height: 1; }
-        .weekly-breakdown { display: flex; gap: 8px; justify-content: center; margin-bottom: 10px; flex-wrap: wrap; flex-shrink: 0;}
+        .weekly-breakdown { display: flex; gap: 8px; justify-content: center; margin-bottom: 15px; flex-wrap: wrap; flex-shrink: 0;}
         .weekly-breakdown .metric-box { min-width: 90px; padding: 8px 5px; }
         .weekly-breakdown span { font-size: 9px; line-height: 1.3; color: #777; white-space: nowrap; } 
         .weekly-breakdown strong { font-size: 18px; margin-top: 2px; }
         .mode-cadastro .metric-box strong { color: #4dabf7; text-shadow: 0 0 10px rgba(0, 123, 255, 0.3); }
         .mode-boletos .metric-box strong { color: #28a745; text-shadow: 0 0 10px rgba(40, 167, 69, 0.3); }
-        .hide-on-print-only { display: flex !important; }
-        .chart-wrapper { position: relative; flex: 1; min-height: 150px; width: 100%; margin-top: 5px; }
+        
+        /* RANKING DA EQUIPE */
+        .ranking-container { display: flex; flex-direction: column; width: 100%; margin-bottom: 15px; flex-shrink: 0; border-top: 1px dashed #333; padding-top: 15px;}
+        .ranking-title { color: #aaa; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin-bottom: 10px; display: flex; align-items: center; gap: 5px;}
+        .ranking-cards { display: flex; gap: 10px; flex-wrap: wrap; }
+        .ranking-item { background: #222; border: 1px solid #444; border-radius: 6px; padding: 10px 15px; display: flex; align-items: center; justify-content: space-between; gap: 15px; flex: 1; min-width: 150px;}
+        .ranking-item-name { font-size: 13px; font-weight: 600; color: #ddd; }
+        .ranking-item-val { font-size: 18px; font-weight: 800; color: #fff; }
+        .mode-cadastro .ranking-item-val { color: #4dabf7; }
+        .mode-boletos .ranking-item-val { color: #28a745; }
 
-        /* --- TABELA E CHECKBOXES --- */
+        .hide-on-print-only { display: flex !important; }
+        .chart-wrapper { position: relative; flex: 1; min-height: 150px; width: 100%; margin-top: auto; flex-shrink: 0;}
+
+        /* --- TABELAS E HISTÓRICO --- */
         .table-responsive { flex: 1; min-height: 0; overflow-y: auto; border: 1px solid #333; border-radius: 8px; background: #111; display: none; } 
         .table-responsive.has-data { display: block; animation: slideUp 0.3s ease forwards; }
         table { width: 100%; border-collapse: separate; border-spacing: 0; }
@@ -192,13 +174,10 @@
         .mode-boletos .custom-cb input:checked ~ .checkmark { background-color: #28a745; border-color: #28a745; }
         #tbl-cadastro .data-row td { color: #4dabf7; font-weight: 500; }
         #tbl-cadastro .data-row .copy-button { color: #4dabf7; }
-        #tbl-cadastro .data-row .copy-button:hover { color: #fff; }
         #tbl-boletos .data-row td { color: #00e676; font-weight: 500; }
         #tbl-boletos .data-row .copy-button { color: #00e676; }
-        #tbl-boletos .data-row .copy-button:hover { color: #fff; }
         .linha-destaque td { background: linear-gradient(90deg, rgba(255, 193, 7, 0.1) 0%, transparent 100%) !important; color: #fff !important; }
         .linha-destaque td:first-child { border-left: 3px solid #ffc107; }
-        .linha-destaque .copy-button { color: #ffca2c !important; text-shadow: 0 0 8px rgba(255, 193, 7, 0.5); }
         .linha-selecionada td { background-color: rgba(0, 0, 0, 0.4) !important; color: #555 !important; text-decoration: line-through; }
         .linha-selecionada .copy-button { color: #555 !important; text-decoration: line-through; }
         .details-row { display: none; }
@@ -209,20 +188,14 @@
         .sub-chk { accent-color: #ffc107; width: 13px; height: 13px; margin-right: 8px; }
         .copy-button { font-family: 'Inter', sans-serif; background: none; border: none; padding: 4px 0; cursor: pointer; font-size: 12px; text-align: left; width: 100%; transition: color 0.2s; font-weight: 500; }
         
-        /* --- EMPTY STATES E HISTÓRICO --- */
         .history-list { flex: 1; overflow-y: auto; min-height: 0; padding-right: 5px; }
         .empty-state { padding: 40px 20px; text-align: center; color: #666; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(255,255,255,0.02); border-radius: 8px; border: 1px dashed #333; height: 100%; box-sizing: border-box; }
-        .empty-state span { font-size: 40px; margin-bottom: 10px; opacity: 0.5; }
-        .empty-state p { margin: 0; font-size: 14px; font-weight: 500; }
-
         .historico-item { background-color: #1a1a1a; padding: 12px 15px; margin-bottom: 8px; border-radius: 8px; border: 1px solid #333; font-size: 13px; color: #ccc; display: flex; align-items: center; gap: 15px; transition: 0.2s; }
         .historico-item:hover { background-color: #222; border-color: #444; transform: translateX(5px); }
         .time-badge { font-family: 'Inter', sans-serif; font-weight: 600; background: #000; padding: 3px 6px; border-radius: 4px; color: #888; font-size: 11px; border: 1px solid #222; }
-        
-        /* NOVO: Tag do nome de quem fez no histórico */
-        .user-tag { background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 4px; font-size: 10px; color: #aaa; margin-left: auto; }
+        .user-tag { background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 4px; font-size: 10px; color: #aaa; margin-left: auto; text-transform: uppercase; font-weight: bold;}
 
-        /* --- TOAST NOTIFICATIONS --- */
+        /* --- TOAST NOTIFICATIONS E MODAIS --- */
         #toast-container { position: fixed; bottom: 30px; right: 30px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
         .toast { background: #222; color: #fff; padding: 12px 20px; border-radius: 8px; border-left: 4px solid #007bff; box-shadow: 0 10px 30px rgba(0,0,0,0.5); font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 10px; animation: toastIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; opacity: 0; transform: translateX(100%); }
         .toast.success { border-color: #28a745; }
@@ -232,7 +205,6 @@
         @keyframes toastIn { to { opacity: 1; transform: translateX(0); } }
         @keyframes toastOut { to { opacity: 0; transform: translateX(100%); margin-bottom: -50px; } }
 
-        /* --- MODAL CONFIRMATION --- */
         #modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
         .modal-box { background: #1a1a1a; padding: 25px; border-radius: 12px; border: 1px solid #333; max-width: 400px; width: 90%; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.5); animation: slideUp 0.3s ease forwards; }
         .modal-box h3 { margin-top: 0; color: #fff; font-size: 18px; }
@@ -251,8 +223,9 @@
 
     <div id="login-screen">
         <div class="login-box">
-            <h2>Bem-vindo ao Sistema</h2>
-            <p>Faça login com sua conta do Google para acessar o Separador de Dados e registrar sua produtividade.</p>
+            <h2>Acesso Restrito</h2>
+            <p>Faça login com sua conta do Google para acessar o sistema.</p>
+            
             <button class="btn-google" onclick="loginGoogle()">
                 <svg viewBox="0 0 24 24" width="18" height="18" xmlns="http://www.w3.org/2000/svg"><g transform="matrix(1, 0, 0, 1, 27.009001, -39.238998)"><path fill="#4285F4" d="M -3.264 51.509 C -3.264 50.719 -3.334 49.969 -3.454 49.239 L -14.754 49.239 L -14.754 53.749 L -8.284 53.749 C -8.574 55.229 -9.424 56.479 -10.684 57.329 L -10.684 60.329 L -6.824 60.329 C -4.564 58.239 -3.264 55.159 -3.264 51.509 Z"/><path fill="#34A853" d="M -14.754 63.239 C -11.514 63.239 -8.804 62.159 -6.824 60.329 L -10.684 57.329 C -11.764 58.049 -13.134 58.489 -14.754 58.489 C -17.884 58.489 -20.534 56.379 -21.484 53.529 L -25.464 53.529 L -25.464 56.619 C -23.494 60.539 -19.444 63.239 -14.754 63.239 Z"/><path fill="#FBBC05" d="M -21.484 53.529 C -21.734 52.809 -21.864 52.039 -21.864 51.239 C -21.864 50.439 -21.724 49.669 -21.484 48.949 L -21.484 45.859 L -25.464 45.859 C -26.284 47.479 -26.754 49.299 -26.754 51.239 C -26.754 53.179 -26.284 54.999 -25.464 56.619 L -21.484 53.529 Z"/><path fill="#EA4335" d="M -14.754 43.989 C -12.984 43.989 -11.404 44.599 -10.154 45.789 L -6.734 41.939 C -8.804 39.869 -11.514 38.489 -14.754 38.489 C -19.444 38.489 -23.494 41.189 -25.464 45.859 L -21.484 48.949 C -20.534 46.099 -17.884 43.989 -14.754 43.989 Z"/></g></svg>
                 Entrar com o Google
@@ -263,9 +236,9 @@
     <div class="user-header" id="user-header">
         <div class="user-info">
             <span class="user-name" id="display-name">Usuário</span>
-            <button class="btn-logout" onclick="logoutGoogle()">Sair da conta</button>
+            <button class="btn-logout" onclick="logoutFirebase()">Sair da conta</button>
         </div>
-        <img src="" alt="Avatar" class="user-avatar" id="display-avatar">
+        <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="Avatar" class="user-avatar" id="display-avatar">
     </div>
 
     <div class="container" id="main-app">
@@ -284,25 +257,19 @@
             </div>
 
             <div id="cadastro-input-tab" class="tab-pane active">
-                
                 <div class="meta-container" id="meta-box-cadastro">
                     <div class="meta-header">
-                        <div class="meta-text-title">
-                            <span id="meta-title-prefix">META DIÁRIA: </span> 
-                            <span id="meta-val-display" style="color:#4dabf7; margin-left:6px;">0</span>
-                        </div>
-                        <div class="meta-text-count"><strong id="progress-count" style="color:#fff;">0</strong> contratos processados hoje</div>
+                        <div class="meta-text-title"><span id="meta-title-prefix">META DIÁRIA: </span><span id="meta-val-display" style="color:#4dabf7; margin-left:6px;">0</span></div>
+                        <div class="meta-text-count"><strong id="progress-count" style="color:#fff;">0</strong> contratos hoje</div>
                         <button class="btn-meta" onclick="editarMeta()">Ajustar Meta</button>
                     </div>
-                    <div class="progress-bar-bg">
-                        <div class="progress-bar-fill" id="progresso-fill"></div>
-                    </div>
+                    <div class="progress-bar-bg"><div class="progress-bar-fill" id="progresso-fill"></div></div>
                 </div>
 
                 <div class="smart-paste-zone" id="paste-zone-cadastro" tabindex="0">
                     <div class="paste-icon">📋</div>
                     <h3>Pronto para receber contratos</h3>
-                    <p>Clique aqui e pressione <b>Ctrl + V</b> para processar os dados instantaneamente.</p>
+                    <p>Clique aqui e pressione <b>Ctrl + V</b> para processar instantaneamente.</p>
                 </div>
 
                 <div class="button-group">
@@ -320,7 +287,7 @@
                         <select id="filtro-mes-hist-cadastro" class="month-select" onchange="renderizarHistorico('cadastro')"></select>
                         <button class="btn-csv" onclick="baixarCSV('cadastro')" style="background: #333; border:1px solid #555;">📥 Exportar CSV</button>
                     </div>
-                    <button class="btn-reset" onclick="confirmarReset('cadastro')">🗑️ Limpar Histórico</button>
+                    <button class="btn-reset admin-only" style="display: none;" onclick="confirmarReset('cadastro')">🗑️ Limpar Histórico</button>
                 </div>
                 <div id="lista-cadastro" class="history-list"></div>
             </div>
@@ -329,7 +296,6 @@
                 <div id="export-container-cadastro" class="export-container">
                     <div class="export-header">
                         <h2 id="est-title-cadastro" style="color: #4dabf7; margin: 0; text-align: left; width: 100%;">Estatísticas de Cadastro</h2>
-                        
                         <div class="export-controls data-html2canvas-ignore hide-on-print-only">
                             <div class="export-controls-left">
                                 <div class="stat-btn-group">
@@ -352,6 +318,8 @@
 
                     <div id="weekly-breakdown-cadastro" class="weekly-breakdown" style="display: none;"></div>
                     
+                    <div id="ranking-cadastro" class="ranking-container"></div>
+
                     <div class="chart-wrapper">
                         <canvas id="chart-cadastro"></canvas>
                     </div>
@@ -368,7 +336,6 @@
             </div>
 
             <div id="boletos-input-tab" class="tab-pane active">
-                
                 <div class="smart-paste-zone" id="paste-zone-boletos" tabindex="0">
                     <div class="paste-icon">📋</div>
                     <h3>Pronto para receber boletos</h3>
@@ -380,7 +347,6 @@
                     <button class="btn-bol" onclick="copiarSelecionados('boletos')" id="btn-copy-boletos">Copiar Selecionados</button>
                     <button class="btn-limpar" onclick="limpar('boletos')">Limpar Tabela</button>
                 </div>
-                
                 <div class="table-responsive" id="res-boletos"></div>
             </div>
 
@@ -390,7 +356,7 @@
                         <select id="filtro-mes-hist-boletos" class="month-select" onchange="renderizarHistorico('boletos')"></select>
                         <button class="btn-csv" onclick="baixarCSV('boletos')" style="background: #333; border:1px solid #555;">📥 Exportar CSV</button>
                     </div>
-                    <button class="btn-reset" onclick="confirmarReset('boletos')">🗑️ Limpar Histórico</button>
+                    <button class="btn-reset admin-only" style="display: none;" onclick="confirmarReset('boletos')">🗑️ Limpar Histórico</button>
                 </div>
                 <div id="lista-boletos" class="history-list"></div>
             </div>
@@ -399,7 +365,6 @@
                 <div id="export-container-boletos" class="export-container">
                     <div class="export-header">
                         <h2 id="est-title-boletos" style="color: #28a745; margin: 0; text-align: left; width: 100%;">Estatísticas de Boletos</h2>
-                        
                         <div class="export-controls data-html2canvas-ignore hide-on-print-only">
                             <div class="export-controls-left">
                                 <div class="stat-btn-group">
@@ -422,6 +387,8 @@
 
                     <div id="weekly-breakdown-boletos" class="weekly-breakdown" style="display: none;"></div>
                     
+                    <div id="ranking-boletos" class="ranking-container"></div>
+
                     <div class="chart-wrapper">
                         <canvas id="chart-boletos"></canvas>
                     </div>
@@ -431,10 +398,9 @@
     </div>
 
     <div id="toast-container"></div>
-
     <div id="modal-overlay">
         <div class="modal-box">
-            <h3>⚠️ Atenção!</h3>
+            <h3>⚠️ Atenção Admin!</h3>
             <p id="modal-msg">Tem certeza que deseja apagar os dados?</p>
             <div class="modal-buttons">
                 <button class="modal-btn-cancel" onclick="closeModal()">Cancelar</button>
@@ -444,6 +410,11 @@
     </div>
 
     <script>
+        /* ========================================================
+           SEU E-MAIL DE ADMINISTRADOR
+           ======================================================== */
+        const ADMIN_EMAIL = "diego.bahr@novagne.com.br"; 
+
         /* ========================================================
            CONFIGURAÇÃO DA NUVEM (FIREBASE)
            ======================================================== */
@@ -463,10 +434,10 @@
         const provider = new firebase.auth.GoogleAuthProvider();
 
         let firebaseData = { cadastro: [], boletos: [] };
-        let currentUserLogado = null; // Guarda quem está usando o app
+        let currentUserLogado = null; 
 
         /* ========================================================
-           SISTEMA DE LOGIN (AUTH)
+           SISTEMA DE LOGIN DO GOOGLE
            ======================================================== */
         function loginGoogle() {
             auth.signInWithPopup(provider).catch(error => {
@@ -474,31 +445,38 @@
             });
         }
 
-        function logoutGoogle() {
+        function logoutFirebase() {
             auth.signOut().then(() => {
                 showToast("Você saiu da conta.");
             });
         }
 
-        // Fica escutando se a pessoa logou ou deslogou
         auth.onAuthStateChanged(user => {
             if (user) {
-                // Usuário logado!
                 currentUserLogado = user;
+                
+                let nomeExibicao = user.displayName ? user.displayName.split(' ')[0] : "Usuário";
+                let urlFoto = user.photoURL || "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+
+                currentUserLogado.customName = nomeExibicao; 
+
                 document.getElementById('login-screen').style.opacity = '0';
                 setTimeout(() => document.getElementById('login-screen').style.display = 'none', 500);
                 
                 document.getElementById('main-app').classList.add('visible');
                 document.getElementById('user-header').classList.add('visible');
                 
-                // Puxa nome (apenas o primeiro) e foto
-                const primeiroNome = user.displayName.split(' ')[0];
-                document.getElementById('display-name').innerText = primeiroNome;
-                document.getElementById('display-avatar').src = user.photoURL;
+                document.getElementById('display-name').innerText = nomeExibicao;
+                document.getElementById('display-avatar').src = urlFoto;
                 
-                showToast(`Bem-vindo(a), ${primeiroNome}!`);
+                showToast(`Bem-vindo(a), ${nomeExibicao}!`);
+
+                if (user.email === ADMIN_EMAIL) {
+                    document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'inline-block');
+                } else {
+                    document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'none');
+                }
             } else {
-                // Deslogado
                 currentUserLogado = null;
                 document.getElementById('login-screen').style.display = 'flex';
                 setTimeout(() => document.getElementById('login-screen').style.opacity = '1', 10);
@@ -509,34 +487,20 @@
         });
 
         /* ========================================================
-           LISTENERS EM TEMPO REAL (A MÁGICA DA SINCRONIZAÇÃO)
+           LISTENERS EM TEMPO REAL
            ======================================================== */
-        
         db.ref('db_cad_v3').on('value', (snapshot) => {
             const data = snapshot.val();
             firebaseData.cadastro = data ? Object.values(data) : [];
-            
-            atualizarBarraProgresso();
-            preencherFiltrosMesHist('cadastro');
-            preencherFiltrosEst('cadastro');
-            
-            if(currentMode === 'cadastro') {
-                renderizarHistorico('cadastro');
-                renderizarGrafico('cadastro');
-            }
+            atualizarBarraProgresso(); preencherFiltrosMesHist('cadastro'); preencherFiltrosEst('cadastro');
+            if(currentMode === 'cadastro') { renderizarHistorico('cadastro'); renderizarGrafico('cadastro'); }
         });
 
         db.ref('db_bol_v3').on('value', (snapshot) => {
             const data = snapshot.val();
             firebaseData.boletos = data ? Object.values(data) : [];
-            
-            preencherFiltrosMesHist('boletos');
-            preencherFiltrosEst('boletos');
-
-            if(currentMode === 'boletos') {
-                renderizarHistorico('boletos');
-                renderizarGrafico('boletos');
-            }
+            preencherFiltrosMesHist('boletos'); preencherFiltrosEst('boletos');
+            if(currentMode === 'boletos') { renderizarHistorico('boletos'); renderizarGrafico('boletos'); }
         });
 
         /* ========================================================
@@ -557,39 +521,22 @@
             return [];
         }
         
-        function getHoje() { 
-            const hj = new Date();
-            return `${hj.getFullYear()}-${String(hj.getMonth()+1).padStart(2,'0')}-${String(hj.getDate()).padStart(2,'0')}`; 
-        }
+        function getHoje() { const hj = new Date(); return `${hj.getFullYear()}-${String(hj.getMonth()+1).padStart(2,'0')}-${String(hj.getDate()).padStart(2,'0')}`; }
         function getHoraAtual() { return new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }); }
 
-        function formatarDataBR(dataISO) {
-            if(!dataISO) return '';
-            const p = dataISO.split('-');
-            if(p.length !== 3) return dataISO;
-            return `${p[2]}/${p[1]}/${p[0]}`; 
-        }
-        function formatarDataCurta(dataISO) {
-            if(!dataISO) return '';
-            const p = dataISO.split('-');
-            if(p.length !== 3) return dataISO;
-            return `${p[2]}/${p[1]}`; 
-        }
+        function formatarDataBR(dataISO) { if(!dataISO) return ''; const p = dataISO.split('-'); return p.length !== 3 ? dataISO : `${p[2]}/${p[1]}/${p[0]}`; }
+        function formatarDataCurta(dataISO) { if(!dataISO) return ''; const p = dataISO.split('-'); return p.length !== 3 ? dataISO : `${p[2]}/${p[1]}`; }
 
         function showToast(msg, type = 'success') {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
             toast.className = `toast ${type}`;
-            let icon = '✅';
-            if(type === 'warning') icon = '⚠️';
-            if(type === 'error') icon = '❌';
-            
+            let icon = type === 'warning' ? '⚠️' : type === 'error' ? '❌' : '✅';
             toast.innerHTML = `<span>${icon}</span> <span>${msg}</span>`;
             container.appendChild(toast);
             setTimeout(() => { toast.classList.add('hide'); setTimeout(() => toast.remove(), 300); }, 3000);
         }
 
-        let confirmActionCallback = null;
         function confirmarReset(tipo) {
             document.getElementById('modal-msg').innerHTML = `Você está prestes a apagar <b>TODO o histórico de ${tipo.toUpperCase()} da Nuvem</b>.<br>Isso não pode ser desfeito. Continuar?`;
             document.getElementById('modal-overlay').style.display = 'flex';
@@ -598,46 +545,31 @@
             btnConfirm.parentNode.replaceChild(newBtnConfirm, btnConfirm);
 
             newBtnConfirm.addEventListener('click', () => { 
-                db.ref(CONFIG[tipo].key).remove().then(() => {
-                    showToast(`Histórico de ${tipo} apagado da nuvem!`);
-                    closeModal();
-                }).catch(err => {
-                    showToast("Erro ao apagar da nuvem.", "error");
-                    console.error(err);
-                });
+                db.ref(CONFIG[tipo].key).remove().then(() => { showToast(`Histórico apagado!`); closeModal(); }).catch(err => { showToast("Erro.", "error"); });
             });
         }
         function closeModal() { document.getElementById('modal-overlay').style.display = 'none'; }
 
-
-        window.onload = function() {
-            // A barra será atualizada pelo listener do Firebase quando carregar
-        };
+        window.onload = function() { atualizarBarraProgresso(); };
 
         function switchAppMode(mode) {
             currentMode = mode;
-            const body = document.body;
-            document.getElementById('nav-btn-cadastro').classList.remove('active');
-            document.getElementById('nav-btn-boletos').classList.remove('active');
+            document.body.classList.remove('mode-cadastro', 'mode-boletos');
+            document.body.classList.add(`mode-${mode}`);
+            
+            ['cadastro', 'boletos'].forEach(m => {
+                document.getElementById(`nav-btn-${m}`).classList.remove('active');
+                document.getElementById(`workspace-${m}`).classList.remove('active');
+            });
+            
             document.getElementById(`nav-btn-${mode}`).classList.add('active');
-
-            if(mode === 'cadastro') {
-                body.classList.remove('mode-boletos'); body.classList.add('mode-cadastro');
-                document.getElementById('workspace-boletos').classList.remove('active');
-                document.getElementById('workspace-cadastro').classList.add('active');
-            } else {
-                body.classList.remove('mode-cadastro'); body.classList.add('mode-boletos');
-                document.getElementById('workspace-cadastro').classList.remove('active');
-                document.getElementById('workspace-boletos').classList.add('active');
-            }
+            document.getElementById(`workspace-${mode}`).classList.add('active');
             abrirAbaInterna(mode, 'input', document.querySelector(`#workspace-${mode} .sub-nav-btn`));
         }
 
         function abrirAbaInterna(modulo, tab, btnElement) {
             const workspace = document.getElementById(`workspace-${modulo}`);
-            workspace.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
-            workspace.querySelectorAll('.sub-nav-btn').forEach(el => el.classList.remove('active'));
-
+            workspace.querySelectorAll('.tab-pane, .sub-nav-btn').forEach(el => el.classList.remove('active'));
             workspace.querySelector(`#${modulo}-${tab}-tab`).classList.add('active');
             btnElement.classList.add('active');
 
@@ -662,9 +594,7 @@
             const feitosHoje = historico.filter(i => i.data === hoje).length;
             
             let percent = (feitosHoje / meta) * 100;
-            let fillWidth = percent > 100 ? 100 : percent; 
-            
-            document.getElementById('progresso-fill').style.width = fillWidth + '%';
+            document.getElementById('progresso-fill').style.width = (percent > 100 ? 100 : percent) + '%';
             document.getElementById('progress-count').innerText = feitosHoje;
 
             const metaBox = document.getElementById('meta-box-cadastro');
@@ -673,21 +603,16 @@
 
             if (feitosHoje >= meta) {
                 metaBox.classList.add('meta-success');
-                titlePrefix.innerText = "🏆 META BATIDA! (Meta: ";
-                valDisplay.innerText = meta + ")";
-                valDisplay.style.color = "#ffc107";
+                titlePrefix.innerText = "🏆 META BATIDA! (Meta: "; valDisplay.innerText = meta + ")"; valDisplay.style.color = "#ffc107";
             } else {
                 metaBox.classList.remove('meta-success');
-                titlePrefix.innerText = "META DIÁRIA: ";
-                valDisplay.innerText = meta;
-                valDisplay.style.color = "#4dabf7";
+                titlePrefix.innerText = "META DIÁRIA: "; valDisplay.innerText = meta; valDisplay.style.color = "#4dabf7";
             }
         }
 
         document.addEventListener('paste', function(e) {
             const workspaceAtivo = document.getElementById(`workspace-${currentMode}`);
             const inputTab = workspaceAtivo.querySelector(`#${currentMode}-input-tab`);
-            
             if (inputTab.classList.contains('active')) {
                 e.preventDefault();
                 const text = (e.clipboardData || window.clipboardData).getData('text');
@@ -698,7 +623,6 @@
         function executarSeparacaoString(txt, tipo) {
             const resDiv = document.getElementById(`res-${tipo}`);
             const cfg = CONFIG[tipo];
-            
             if (!txt.trim()) { return; }
 
             let html = `<table id="tbl-${tipo}"><thead><tr>`;
@@ -706,8 +630,7 @@
             html += `</tr></thead><tbody>`;
 
             const linhas = txt.split('\n');
-            let tempNum = '';
-            let rowCount = 0;
+            let tempNum = '', rowCount = 0;
             
             for (let linha of linhas) {
                 linha = linha.trim();
@@ -726,19 +649,11 @@
                         else { tempNum = ''; }
                     } else if (linha.match(/^[\d/R]+$/)) { tempNum = linha; }
                 }
-
                 if (c && n) { html += criarHTMLDaLinha(tipo, c, n, extraCols, rowCount); rowCount++; }
             }
             
-            if (rowCount > 0) {
-                html += '</tbody></table>';
-                resDiv.innerHTML = html;
-                resDiv.classList.add('has-data');
-                atualizarDestaques(tipo);
-                showToast(`${rowCount} dados lidos com sucesso!`);
-            } else {
-                showToast("Não foi possível identificar dados neste texto.", "warning");
-            }
+            if (rowCount > 0) { resDiv.innerHTML = html + '</tbody></table>'; resDiv.classList.add('has-data'); atualizarDestaques(tipo); showToast(`${rowCount} dados lidos!`); } 
+            else { showToast("Não foi possível identificar dados neste texto.", "warning"); }
         }
 
         function criarHTMLDaLinha(tipo, c, n, cols, index) {
@@ -753,9 +668,8 @@
                 row += `<td><button class="copy-button" onclick="copiar(this)">${cols[5]||''}</button></td>
                         <td><button class="copy-button" onclick="copiar(this)">${cols[6]||''}</button></td>
                         <td><button class="copy-button" onclick="copiar(this)">${cols[8]||''}</button></td>
-                        <td><button class="copy-button" onclick="copiar(this)">${cols[11]||''}</button></td></tr>`;
-                
-                row += `<tr id="${rowId}-details" class="details-row"><td colspan="8"><div class="sub-task-container">
+                        <td><button class="copy-button" onclick="copiar(this)">${cols[11]||''}</button></td></tr>
+                        <tr id="${rowId}-details" class="details-row"><td colspan="8"><div class="sub-task-container">
                             <label class="sub-task-label"><input type="checkbox" class="sub-chk" onchange="subChkClick(this)"> CADASTRO DO CUMPRIMENTO DE SENTENÇA</label>
                             <label class="sub-task-label"><input type="checkbox" class="sub-chk" onchange="subChkClick(this)"> CADASTRO DA PARCELA E PREENCHIMENTO DO HISTÓRICO</label>
                             <label class="sub-task-label"><input type="checkbox" class="sub-chk" onchange="subChkClick(this)"> ALTERAR DA ABA CADASTRO PARA CADASTRADOS</label>
@@ -771,40 +685,22 @@
             const n = cells[2].innerText;
             const p = cells[3].innerText;
             
-            // NOVO: Adiciona o nome do operador logado ao salvar
-            const nomeOperador = currentUserLogado ? currentUserLogado.displayName.split(' ')[0] : 'Desconhecido';
+            const nomeOperador = currentUserLogado && currentUserLogado.customName ? currentUserLogado.customName : 'Desconhecido';
 
-            let obj = { 
-                contrato: c, 
-                nome: n, 
-                processo: p, 
-                data: getHoje(), 
-                hora: getHoraAtual(),
-                operador: nomeOperador 
-            };
-            
-            if (tipo === 'cadastro') {
-                obj.dt = cells[4].innerText; obj.val = cells[5].innerText; obj.adv = cells[6].innerText; obj.veic = cells[7].innerText;
-            }
+            let obj = { contrato: c, nome: n, processo: p, data: getHoje(), hora: getHoraAtual(), operador: nomeOperador };
+            if (tipo === 'cadastro') { obj.dt = cells[4].innerText; obj.val = cells[5].innerText; obj.adv = cells[6].innerText; obj.veic = cells[7].innerText; }
 
             const historico = getStorage(CONFIG[tipo].key);
-            const jaExiste = historico.some(item => item.contrato === c && item.data === getHoje());
-            if (!jaExiste) { 
-                db.ref(CONFIG[tipo].key).push(obj).then(() => {
-                    // Salvo com sucesso
-                }).catch(err => {
-                    showToast("Erro de conexão.", "error");
-                });
+            if (!historico.some(item => item.contrato === c && item.data === getHoje())) { 
+                db.ref(CONFIG[tipo].key).push(obj).catch(err => { showToast("Erro de conexão.", "error"); });
             }
         }
 
         function chkClick(chk) {
             const tr = chk.closest('tr');
             const tipo = currentMode;
-            
             if (chk.checked) { tr.classList.add('linha-selecionada'); tr.classList.remove('linha-destaque'); salvarLinhaNoHistorico(tipo, tr); } 
             else { tr.classList.remove('linha-selecionada'); }
-
             if (tipo === 'cadastro') {
                 const detailsRow = document.getElementById(tr.id + '-details');
                 if (detailsRow) detailsRow.querySelectorAll('.sub-chk').forEach(sub => sub.checked = chk.checked);
@@ -817,7 +713,6 @@
             const mainRow = document.getElementById(detailsRow.id.replace('-details', ''));
             const mainChk = mainRow.querySelector('.chk');
             const allChecked = Array.from(detailsRow.querySelectorAll('.sub-chk')).every(c => c.checked);
-            
             if (mainChk.checked !== allChecked) {
                 mainChk.checked = allChecked;
                 if (allChecked) { mainRow.classList.add('linha-selecionada'); salvarLinhaNoHistorico('cadastro', mainRow); } 
@@ -827,15 +722,13 @@
         }
 
         function atualizarDestaques(tipo) {
-            const divId = `res-${tipo}`;
-            const trs = document.querySelectorAll(`#${divId} tbody tr.data-row`);
+            const trs = document.querySelectorAll(`#res-${tipo} tbody tr.data-row`);
             trs.forEach(tr => {
                 if (!tr.querySelector('.chk').checked) tr.classList.remove('linha-destaque');
                 if (tipo === 'cadastro') { const d = document.getElementById(tr.id + '-details'); if(d) d.style.display = 'none'; }
             });
             for (let tr of trs) {
-                const chk = tr.querySelector('.chk');
-                if (chk && !chk.checked) {
+                if (!tr.querySelector('.chk').checked) {
                     tr.classList.add('linha-destaque');
                     if (tipo === 'cadastro') { const d = document.getElementById(tr.id + '-details'); if(d) d.style.display = 'table-row'; }
                     break;
@@ -844,17 +737,15 @@
         }
 
         function marcarTodos(tipo) {
-            const divId = `res-${tipo}`;
-            const chks = document.querySelectorAll(`#${divId} .data-row .chk`);
+            const chks = document.querySelectorAll(`#res-${tipo} .data-row .chk`);
             const status = !Array.from(chks).every(c => c.checked);
             chks.forEach(c => { if (c.checked !== status) { c.checked = status; chkClick(c); } });
             document.getElementById(`btn-toggle-${tipo}`).textContent = status ? 'Desmarcar Todos' : 'Marcar Todos';
         }
 
         function copiar(btn) {
-            const txt = btn.textContent;
-            navigator.clipboard.writeText(txt).then(() => {
-                showToast(`Copiado: ${txt}`);
+            navigator.clipboard.writeText(btn.textContent).then(() => {
+                showToast(`Copiado: ${btn.textContent}`);
                 const cor = btn.style.color; const sombra = btn.style.textShadow;
                 btn.style.color = "#28a745"; btn.style.textShadow = "0 0 10px rgba(40,167,69,0.5)"; btn.style.fontWeight = "bold";
                 setTimeout(() => { btn.style.color = cor; btn.style.textShadow = sombra; btn.style.fontWeight = "500"; }, 800);
@@ -862,12 +753,10 @@
         }
 
         function copiarSelecionados(tipo) {
-            const divId = `res-${tipo}`;
-            const chks = document.querySelectorAll(`#${divId} .data-row .chk:checked`);
+            const chks = document.querySelectorAll(`#res-${tipo} .data-row .chk:checked`);
             let txt = '';
             chks.forEach(chk => {
-                const tr = chk.closest('tr');
-                let rowTxt = [];
+                const tr = chk.closest('tr'); let rowTxt = [];
                 tr.querySelectorAll('td:not(:first-child)').forEach(td => rowTxt.push(td.innerText));
                 txt += rowTxt.join('\t') + '\n';
             });
@@ -880,7 +769,7 @@
             resDiv.innerHTML = ''; resDiv.classList.remove('has-data'); showToast('Tabela limpa.');
         }
 
-        /* --- FILTROS DE HISTÓRICO E EMPTY STATE --- */
+        /* --- HISTÓRICO E ESTATÍSTICAS --- */
         function preencherFiltrosMesHist(tipo) {
             const select = document.getElementById(`filtro-mes-hist-${tipo}`);
             if(!select) return;
@@ -888,33 +777,25 @@
             const valorAtual = select.value;
             const meses = new Set(dados.map(item => item.data.substring(0, 7))); 
             const mesesOrdenados = Array.from(meses).sort().reverse();
-            
             select.innerHTML = '<option value="">Todos os Meses</option>';
             mesesOrdenados.forEach(mes => {
                 const [ano, numMes] = mes.split('-');
                 const nomeMes = new Date(ano, numMes - 1).toLocaleString('pt-BR', { month: 'long' });
-                const label = `${nomeMes.charAt(0).toUpperCase() + nomeMes.slice(1)} / ${ano}`;
-                const option = document.createElement('option'); option.value = mes; option.textContent = label; select.appendChild(option);
+                select.innerHTML += `<option value="${mes}">${nomeMes.charAt(0).toUpperCase() + nomeMes.slice(1)} / ${ano}</option>`;
             });
-
             const mesAtual = getHoje().substring(0,7);
-            if (!valorAtual && mesesOrdenados.includes(mesAtual)) { select.value = mesAtual; } 
-            else if (!valorAtual && mesesOrdenados.length > 0) { select.value = ""; } 
-            else { select.value = valorAtual; }
+            select.value = (!valorAtual && mesesOrdenados.includes(mesAtual)) ? mesAtual : (!valorAtual ? "" : valorAtual);
         }
 
         function renderizarHistorico(tipo) {
             const div = document.getElementById(`lista-${tipo}`);
             const filtroMes = document.getElementById(`filtro-mes-hist-${tipo}`).value;
-            const dados = getStorage(CONFIG[tipo].key);
-            const dadosFiltrados = filtroMes ? dados.filter(item => item.data.startsWith(filtroMes)) : dados;
+            const dadosFiltrados = filtroMes ? getStorage(CONFIG[tipo].key).filter(i => i.data.startsWith(filtroMes)) : getStorage(CONFIG[tipo].key);
             
             if (dadosFiltrados.length === 0) { div.innerHTML = `<div class="empty-state"><span>📭</span><p>Nenhum dado encontrado para o período.</p></div>`; return; }
             
             div.innerHTML = dadosFiltrados.slice().reverse().map(d => {
-                // Adicionada a Tag do usuário que fez o registro
-                let tagOperador = d.operador ? `<span class="user-tag">Feito por: ${d.operador}</span>` : '';
-                
+                let tagOperador = d.operador ? `<span class="user-tag">Operador: ${d.operador}</span>` : '';
                 return `<div class="historico-item">
                             <small>${formatarDataBR(d.data)} <span class="time-badge">${d.hora || '--:--'}</span></small> 
                             <strong style="color:${tipo==='cadastro'?'#4dabf7':'#28a745'}; flex-shrink:0;">${d.contrato}</strong> 
@@ -930,16 +811,13 @@
             const dadosExportar = filtroMes ? dados.filter(item => item.data.startsWith(filtroMes)) : dados;
             if (!dadosExportar.length) { showToast('Sem dados para exportar nesse período.', 'error'); return; }
             
-            // Adicionado operador no CSV
             let csv = "Data;Hora;Contrato;Nome;Processo;Operador\n";
             dadosExportar.forEach(d => { csv += `${formatarDataBR(d.data)};${d.hora || ''};${d.contrato};${d.nome};${d.processo||''};${d.operador||'Desconhecido'}\n`; });
             const a = document.createElement('a'); a.href = 'data:text/csv;charset=utf-8,' + encodeURI(csv); a.download = `Relatorio_${tipo}${filtroMes ? '_'+filtroMes : ''}.csv`; a.click();
         }
 
-        /* --- DASHBOARD ESTATÍSTICAS --- */
         function preencherFiltrosEst(tipo) {
             const dados = getStorage(CONFIG[tipo].key);
-            
             const selMes = document.getElementById(`filtro-mes-est-${tipo}`);
             if(selMes) {
                 const valorAtualMes = selMes.value;
@@ -949,8 +827,7 @@
                 mesesOrdenados.forEach(mes => {
                     const [ano, numMes] = mes.split('-');
                     const nomeMes = new Date(ano, numMes - 1).toLocaleString('pt-BR', { month: 'long' });
-                    const label = `${nomeMes.charAt(0).toUpperCase() + nomeMes.slice(1)} / ${ano}`;
-                    const option = document.createElement('option'); option.value = mes; option.textContent = label; selMes.appendChild(option);
+                    selMes.innerHTML += `<option value="${mes}">${nomeMes.charAt(0).toUpperCase() + nomeMes.slice(1)} / ${ano}</option>`;
                 });
                 if (valorAtualMes) selMes.value = valorAtualMes;
             }
@@ -959,18 +836,12 @@
             if(selSemana) {
                 const valorAtualSemana = selSemana.value;
                 let domingos = new Set();
-                dados.forEach(item => {
-                    let d = new Date(item.data + "T12:00:00");
-                    d.setDate(d.getDate() - d.getDay()); 
-                    domingos.add(d.toISOString().split('T')[0]);
-                });
+                dados.forEach(item => { let d = new Date(item.data + "T12:00:00"); d.setDate(d.getDate() - d.getDay()); domingos.add(d.toISOString().split('T')[0]); });
                 const domingosOrdenados = Array.from(domingos).sort().reverse();
                 selSemana.innerHTML = '<option value="">Semana Atual</option>';
                 domingosOrdenados.forEach(domISO => {
-                    let dDom = new Date(domISO + "T12:00:00");
-                    let dSab = new Date(domISO + "T12:00:00"); dSab.setDate(dSab.getDate() + 6);
-                    let label = `${formatarDataBR(domISO)} a ${formatarDataBR(dSab.toISOString().split('T')[0])}`; 
-                    const option = document.createElement('option'); option.value = domISO; option.textContent = label; selSemana.appendChild(option);
+                    let dDom = new Date(domISO + "T12:00:00"), dSab = new Date(domISO + "T12:00:00"); dSab.setDate(dSab.getDate() + 6);
+                    selSemana.innerHTML += `<option value="${domISO}">${formatarDataBR(domISO)} a ${formatarDataBR(dSab.toISOString().split('T')[0])}</option>`;
                 });
                 if (valorAtualSemana) selSemana.value = valorAtualSemana;
             }
@@ -978,46 +849,34 @@
 
         function setStatView(tipo, view) {
             currentStatView[tipo] = view;
-            document.getElementById(`btn-${tipo.substring(0,3)}-week`).classList.remove('active');
-            document.getElementById(`btn-${tipo.substring(0,3)}-month`).classList.remove('active');
-            document.getElementById(`btn-${tipo.substring(0,3)}-year`).classList.remove('active');
-            if(view !== 'custom_week' && view !== 'custom_month') { document.getElementById(`btn-${tipo.substring(0,3)}-${view}`).classList.add('active'); }
+            ['week', 'month', 'year'].forEach(v => document.getElementById(`btn-${tipo.substring(0,3)}-${v}`).classList.remove('active'));
+            if(view !== 'custom_week' && view !== 'custom_month') document.getElementById(`btn-${tipo.substring(0,3)}-${view}`).classList.add('active');
 
             const selSemana = document.getElementById(`filtro-semana-est-${tipo}`);
             const selMes = document.getElementById(`filtro-mes-est-${tipo}`);
-
             if (view === 'week' || view === 'custom_week') { selSemana.style.display = 'inline-block'; selMes.style.display = 'none'; if(view === 'week') selSemana.value = ""; } 
             else if (view === 'month' || view === 'custom_month') { selSemana.style.display = 'none'; selMes.style.display = 'inline-block'; if(view === 'month') selMes.value = ""; } 
-            else if (view === 'year') { selSemana.style.display = 'none'; selMes.style.display = 'none'; }
+            else if (view === 'year') { selSemana.style.display = 'none'; selSemana.style.display = 'none'; }
             renderizarGrafico(tipo);
         }
 
         function onSelectMonthEst(tipo) {
             const selSemana = document.getElementById(`filtro-semana-est-${tipo}`);
             const selMes = document.getElementById(`filtro-mes-est-${tipo}`);
-            if(selSemana.style.display !== 'none') { if(selSemana.value) setStatView(tipo, 'custom_week'); else setStatView(tipo, 'week'); } 
-            else { if(selMes.value) setStatView(tipo, 'custom_month'); else setStatView(tipo, 'month'); }
+            if(selSemana.style.display !== 'none') { setStatView(tipo, selSemana.value ? 'custom_week' : 'week'); } 
+            else { setStatView(tipo, selMes.value ? 'custom_month' : 'month'); }
         }
 
         const chartDataLabelsPlugin = {
             id: 'chartDataLabelsPlugin',
-            afterDatasetsDraw(chart, args, pluginOptions) {
-                const { ctx, data } = chart;
-                ctx.save();
-                ctx.font = 'bold 15px "Inter", sans-serif';
-                ctx.fillStyle = '#fff';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'bottom';
-                chart.getDatasetMeta(0).data.forEach((datapoint, index) => {
-                    const value = data.datasets[0].data[index];
-                    if (value > 0) ctx.fillText(value, datapoint.x, datapoint.y - 8); 
-                });
+            afterDatasetsDraw(chart) {
+                const { ctx, data } = chart; ctx.save(); ctx.font = 'bold 15px "Inter", sans-serif'; ctx.fillStyle = '#fff'; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+                chart.getDatasetMeta(0).data.forEach((dp, index) => { if (data.datasets[0].data[index] > 0) ctx.fillText(data.datasets[0].data[index], dp.x, dp.y - 8); });
                 ctx.restore();
             }
         };
 
-        let chartCadastro = null;
-        let chartBoletos = null;
+        let chartCadastro = null, chartBoletos = null;
 
         function renderizarGrafico(tipo) {
             const ctxId = `chart-${tipo}`;
@@ -1027,29 +886,24 @@
             const view = currentStatView[tipo];
             const dadosBrutos = getStorage(CONFIG[tipo].key);
             const hoje = new Date();
-            let dataFiltrada = [];
-            let labelsTarget = []; 
-            let titleText = "";
+            let dataFiltrada = [], labelsTarget = [], titleText = "";
 
             if (view === 'week' || view === 'custom_week') {
                 let domString = document.getElementById(`filtro-semana-est-${tipo}`).value;
-                let dom = new Date();
-                if (domString) { dom = new Date(domString + "T12:00:00"); } else { dom.setDate(dom.getDate() - dom.getDay()); }
+                let dom = domString ? new Date(domString + "T12:00:00") : new Date();
+                if (!domString) dom.setDate(dom.getDate() - dom.getDay());
                 dom.setHours(0,0,0,0);
                 for(let i=0; i<7; i++) { let d = new Date(dom); d.setDate(d.getDate() + i); labelsTarget.push(d.toISOString().split('T')[0]); }
                 dataFiltrada = dadosBrutos.filter(d => d.data >= labelsTarget[0] && d.data <= labelsTarget[6]);
                 titleText = `- Semana (${formatarDataBR(labelsTarget[0])} a ${formatarDataBR(labelsTarget[6])})`;
-
             } else if (view === 'month' || view === 'custom_month') {
                 let mesString = document.getElementById(`filtro-mes-est-${tipo}`).value;
-                let ano, mes;
-                if (mesString) { [ano, mes] = mesString.split('-'); } else { ano = hoje.getFullYear(); mes = String(hoje.getMonth() + 1).padStart(2, '0'); }
+                let ano = mesString ? mesString.split('-')[0] : hoje.getFullYear();
+                let mes = mesString ? mesString.split('-')[1] : String(hoje.getMonth() + 1).padStart(2, '0');
                 let diasNoMes = new Date(ano, mes, 0).getDate();
                 for(let i=1; i<=diasNoMes; i++) { labelsTarget.push(`${ano}-${mes}-${String(i).padStart(2,'0')}`); }
                 dataFiltrada = dadosBrutos.filter(d => d.data.startsWith(`${ano}-${mes}`));
-                const nomeMes = new Date(ano, mes - 1).toLocaleString('pt-BR', { month: 'long' });
-                titleText = `- ${nomeMes.charAt(0).toUpperCase() + nomeMes.slice(1)} de ${ano}`;
-
+                titleText = `- ${new Date(ano, mes - 1).toLocaleString('pt-BR', { month: 'long' }).replace(/^\w/, c => c.toUpperCase())} de ${ano}`;
             } else if (view === 'year') {
                 let ano = hoje.getFullYear();
                 for(let i=1; i<=12; i++) { labelsTarget.push(`${ano}-${String(i).padStart(2,'0')}`); }
@@ -1057,88 +911,80 @@
                 titleText = `- Visão Anual (${ano})`;
             }
 
-            const tituloTipo = tipo === 'cadastro' ? 'Estatísticas de Cadastro' : 'Estatísticas de Boletos';
-            document.getElementById(`est-title-${tipo}`).innerText = `${tituloTipo} ${titleText}`;
+            document.getElementById(`est-title-${tipo}`).innerText = `Estatísticas de ${tipo.charAt(0).toUpperCase() + tipo.slice(1)} ${titleText}`;
 
-            let valuesMapped = [];
-            let labelsDisplay = [];
-            let countsPorDia = {}; 
+            let valuesMapped = [], labelsDisplay = [], countsPorDia = {}; 
 
             if (view === 'year') {
                 let mesesCount = {};
-                dataFiltrada.forEach(d => { let m = d.data.substring(0,7); mesesCount[m] = (mesesCount[m] || 0) + 1; countsPorDia[d.data] = (countsPorDia[d.data] || 0) + 1; });
+                dataFiltrada.forEach(d => { let m = d.data.substring(0,7); mesesCount[m] = (mesesCount[m] || 0) + 1; });
                 labelsTarget.forEach((prefix, i) => {
                     valuesMapped.push(mesesCount[prefix] || 0);
-                    let mName = new Date(hoje.getFullYear(), i).toLocaleString('pt-BR', { month: 'short' });
-                    labelsDisplay.push(mName.charAt(0).toUpperCase() + mName.slice(1));
+                    labelsDisplay.push(new Date(hoje.getFullYear(), i).toLocaleString('pt-BR', { month: 'short' }).replace(/^\w/, c => c.toUpperCase()));
                 });
             } else {
                 dataFiltrada.forEach(d => { countsPorDia[d.data] = (countsPorDia[d.data] || 0) + 1; });
                 labelsTarget.forEach(dateISO => {
                     valuesMapped.push(countsPorDia[dateISO] || 0);
-                    let dObj = new Date(dateISO + "T12:00:00");
-                    if (view === 'week' || view === 'custom_week') { labelsDisplay.push(`${diasSemana[dObj.getDay()]}, ${formatarDataCurta(dateISO)}`); } 
-                    else { labelsDisplay.push(formatarDataCurta(dateISO)); }
+                    labelsDisplay.push((view === 'week' || view === 'custom_week') ? `${diasSemana[new Date(dateISO + "T12:00:00").getDay()]}, ${formatarDataCurta(dateISO)}` : formatarDataCurta(dateISO));
                 });
             }
 
-            let diasTrabalhados = Object.keys(countsPorDia).length;
+            let diasTrabalhados = Object.keys(countsPorDia).length || (view === 'year' ? Object.keys(dataFiltrada.reduce((acc, curr) => (acc[curr.data]=true, acc), {})).length : 0);
             let totalPeriodo = dataFiltrada.length;
-            let media = diasTrabalhados > 0 ? (totalPeriodo / diasTrabalhados).toFixed(1) : '0';
-            let maxDia = diasTrabalhados > 0 ? Math.max(...Object.values(countsPorDia)) : 0;
-            
-            document.getElementById(`avg-${tipo}`).innerText = media;
-            document.getElementById(`max-${tipo}`).innerText = maxDia;
+            document.getElementById(`avg-${tipo}`).innerText = diasTrabalhados > 0 ? (totalPeriodo / diasTrabalhados).toFixed(1) : '0';
+            document.getElementById(`max-${tipo}`).innerText = dataFiltrada.length > 0 ? (view === 'year' ? Math.max(...Object.values(dataFiltrada.reduce((acc, curr) => (acc[curr.data]=(acc[curr.data]||0)+1, acc), {}))) : Math.max(...Object.values(countsPorDia))) : 0;
             document.getElementById(`total-${tipo}`).innerText = totalPeriodo;
 
             let breakdownContainer = document.getElementById(`weekly-breakdown-${tipo}`);
             if (view === 'month' || view === 'custom_month') {
-                let [anoStr, mesStr] = labelsTarget[0].split('-');
-                let anoInt = parseInt(anoStr, 10); let mesInt = parseInt(mesStr, 10) - 1; 
+                let [anoInt, mesInt] = labelsTarget[0].split('-').map(Number); mesInt--;
                 let primeiroDia = new Date(anoInt, mesInt, 1);
-                let ultimoDia = new Date(anoInt, mesInt + 1, 0);
+                let ultimoSab = new Date(anoInt, mesInt + 1, 0); ultimoSab.setDate(ultimoSab.getDate() + (6 - ultimoSab.getDay()));
+                let cur = new Date(primeiroDia); cur.setDate(cur.getDate() - cur.getDay());
                 
-                let primeiroDom = new Date(primeiroDia); primeiroDom.setDate(primeiroDia.getDate() - primeiroDia.getDay());
-                let ultimoSab = new Date(ultimoDia); ultimoSab.setDate(ultimoDia.getDate() + (6 - ultimoDia.getDay()));
-                
-                let semanasCal = [];
-                let cur = new Date(primeiroDom.getFullYear(), primeiroDom.getMonth(), primeiroDom.getDate(), 12, 0, 0);
-                let fimLoop = new Date(ultimoSab.getFullYear(), ultimoSab.getMonth(), ultimoSab.getDate(), 12, 0, 0);
-                
-                while (cur <= fimLoop) {
+                let html = '';
+                while (cur <= ultimoSab) {
                     let fim = new Date(cur); fim.setDate(cur.getDate() + 6);
-                    semanasCal.push({ inicioStr: cur.toISOString().split('T')[0], fimStr: fim.toISOString().split('T')[0], total: 0 });
+                    let iniStr = cur.toISOString().split('T')[0], fimStr = fim.toISOString().split('T')[0];
+                    let total = dadosBrutos.filter(d => d.data >= iniStr && d.data <= fimStr).length;
+                    html += `<div class="metric-box mini"><span>SEMANA ${formatarDataCurta(iniStr)} A ${formatarDataCurta(fimStr)}</span><strong>${total}</strong></div>`;
                     cur.setDate(cur.getDate() + 7);
                 }
-
-                dadosBrutos.forEach(d => {
-                    let dStr = d.data;
-                    for (let i = 0; i < semanasCal.length; i++) {
-                        if (dStr >= semanasCal[i].inicioStr && dStr <= semanasCal[i].fimStr) { semanasCal[i].total++; break; }
-                    }
-                });
-
-                let html = '';
-                semanasCal.forEach((sem, i) => { html += `<div class="metric-box mini"><span>SEMANA ${formatarDataCurta(sem.inicioStr)} A ${formatarDataCurta(sem.fimStr)}</span><strong>${sem.total}</strong></div>`; });
                 breakdownContainer.innerHTML = html; breakdownContainer.style.display = 'flex';
             } else { breakdownContainer.style.display = 'none'; }
 
+            // RANKING DA EQUIPE
+            let rankingCounts = {};
+            dataFiltrada.forEach(d => {
+                let op = d.operador || 'Desconhecido';
+                rankingCounts[op] = (rankingCounts[op] || 0) + 1;
+            });
+            let rankingArr = Object.entries(rankingCounts).sort((a,b) => b[1] - a[1]);
+            
+            let rankingContainer = document.getElementById(`ranking-${tipo}`);
+            if(rankingArr.length > 0) {
+                let rankingHtml = `<div class="ranking-title">🏆 Produtividade da Equipe no Período</div><div class="ranking-cards">`;
+                rankingArr.forEach(item => {
+                    rankingHtml += `
+                        <div class="ranking-item">
+                            <span class="ranking-item-name">${item[0]}</span>
+                            <span class="ranking-item-val">${item[1]}</span>
+                        </div>`;
+                });
+                rankingHtml += `</div>`;
+                rankingContainer.innerHTML = rankingHtml;
+                rankingContainer.style.display = 'flex';
+            } else {
+                rankingContainer.style.display = 'none';
+            }
+
             let activeChart = tipo === 'cadastro' ? chartCadastro : chartBoletos;
             if (activeChart) activeChart.destroy();
-            
             const novoChart = new Chart(ctx, { 
                 type: 'bar', 
                 data: { labels: labelsDisplay, datasets: [{ data: valuesMapped, backgroundColor: tipo === 'cadastro' ? '#007bff' : '#28a745', borderRadius: 6, maxBarThickness: 60 }] }, 
-                options: { 
-                    responsive: true, 
-                    maintainAspectRatio: false, 
-                    layout: { padding: { top: 35, bottom: 20 } }, 
-                    plugins: { legend: { display: false } }, 
-                    scales: { 
-                        y: { display: false, beginAtZero: true, grace: '20%' }, 
-                        x: { grid: { display: false }, ticks: { color: '#888', font: {family: "'Inter', sans-serif", size: 11} } } 
-                    } 
-                },
+                options: { responsive: true, maintainAspectRatio: false, layout: { padding: { top: 35, bottom: 20 } }, plugins: { legend: { display: false } }, scales: { y: { display: false, beginAtZero: true, grace: '20%' }, x: { grid: { display: false }, ticks: { color: '#888', font: {family: "'Inter', sans-serif", size: 11} } } } },
                 plugins: [chartDataLabelsPlugin]
             });
             if(tipo === 'cadastro') chartCadastro = novoChart; else chartBoletos = novoChart;
@@ -1147,20 +993,9 @@
         function baixarImagemEstatisticas(tipo) {
             const elemento = document.getElementById(`export-container-${tipo}`);
             showToast("Gerando relatório em imagem... 📸");
-            
-            html2canvas(elemento, { 
-                backgroundColor: '#1a1a1a', 
-                scale: 2, 
-                ignoreElements: function(el) { return el.classList.contains('hide-on-print-only'); }
-            }).then(canvas => {
-                const link = document.createElement('a');
-                link.download = `Estatisticas_${tipo}_${getHoje()}.png`;
-                link.href = canvas.toDataURL('image/png');
-                link.click();
-            }).catch(err => {
-                showToast("Falha ao gerar a imagem.", "error");
-                console.error(err);
-            });
+            html2canvas(elemento, { backgroundColor: '#1a1a1a', scale: 2, ignoreElements: el => el.classList.contains('hide-on-print-only') })
+                .then(canvas => { const link = document.createElement('a'); link.download = `Estatisticas_${tipo}_${getHoje()}.png`; link.href = canvas.toDataURL('image/png'); link.click(); })
+                .catch(err => { showToast("Falha ao gerar a imagem.", "error"); });
         }
     </script>
 </body>
