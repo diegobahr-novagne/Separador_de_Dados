@@ -25,7 +25,16 @@
         ::-webkit-scrollbar-thumb { background: #444; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #666; }
 
-        /* --- TELA DE CARREGAMENTO (LOADING SCREEN) --- */
+        /* --- LOGO DA EMPRESA --- */
+        .company-logo { width: 150px; margin-bottom: 20px; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.5)); }
+        .pulse-logo { animation: pulseLogo 2s infinite; }
+        @keyframes pulseLogo { 0%, 100% { transform: scale(1); opacity: 0.7; } 50% { transform: scale(1.05); opacity: 1; } }
+
+        .brand-header { position: absolute; top: 15px; left: 20px; display: none; align-items: center; z-index: 100; }
+        .brand-header.visible { display: flex; animation: fadeIn 0.8s ease forwards; }
+        .brand-header img { height: 35px; object-fit: contain; }
+
+        /* --- TELA DE CARREGAMENTO --- */
         #loading-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #0d0d0d; z-index: 99999;
@@ -51,8 +60,8 @@
         .login-box {
             background: #1a1a1a; padding: 40px; border-radius: 16px; border: 1px solid #333; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.8); max-width: 350px; width: 90%;
         }
-        .login-box h2 { font-size: 24px; margin-bottom: 10px; color: #fff; }
-        .login-box p { color: #888; font-size: 14px; margin-bottom: 30px; line-height: 1.5; }
+        .login-box h2 { font-size: 22px; margin-bottom: 10px; color: #fff; }
+        .login-box p { color: #888; font-size: 13px; margin-bottom: 30px; line-height: 1.5; }
         
         .btn-google {
             background: #fff; color: #333; font-family: 'Inter', sans-serif; font-weight: 700; padding: 12px 20px; border: none; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; font-size: 14px; transition: 0.2s; box-shadow: 0 4px 15px rgba(255,255,255,0.1); margin-bottom: 5px;
@@ -62,7 +71,7 @@
 
         /* --- CABEÇALHO DO USUÁRIO --- */
         .user-header { position: absolute; top: 15px; right: 20px; display: none; align-items: center; gap: 12px; z-index: 100; }
-        .user-header.visible { display: flex; }
+        .user-header.visible { display: flex; animation: fadeIn 0.8s ease forwards; }
         .user-info { display: flex; flex-direction: column; align-items: flex-end; }
         .user-name { font-size: 13px; font-weight: 700; color: #fff; }
         .btn-logout { background: transparent; border: none; color: #888; font-size: 11px; cursor: pointer; padding: 0; text-decoration: underline; }
@@ -275,20 +284,26 @@
 <body class="mode-cadastro">
 
     <div id="loading-screen">
+        <img src="https://drive.google.com/uc?export=view&id=1FoMog1y6r_9tjd5qjOP-TY1r853fD6_P" alt="Logo Novagne" class="company-logo pulse-logo">
         <div class="spinner"></div>
         <p>Sincronizando com a nuvem...</p>
     </div>
 
     <div id="login-screen">
         <div class="login-box">
+            <img src="https://drive.google.com/uc?export=view&id=1FoMog1y6r_9tjd5qjOP-TY1r853fD6_P" alt="Logo Novagne" class="company-logo">
             <h2>Acesso Restrito</h2>
-            <p>Faça login com sua conta do Google para acessar o sistema.</p>
+            <p>Faça login com sua conta corporativa para acessar o sistema.</p>
             
             <button class="btn-google" onclick="loginGoogle()">
                 <svg viewBox="0 0 24 24" width="18" height="18" xmlns="http://www.w3.org/2000/svg"><g transform="matrix(1, 0, 0, 1, 27.009001, -39.238998)"><path fill="#4285F4" d="M -3.264 51.509 C -3.264 50.719 -3.334 49.969 -3.454 49.239 L -14.754 49.239 L -14.754 53.749 L -8.284 53.749 C -8.574 55.229 -9.424 56.479 -10.684 57.329 L -10.684 60.329 L -6.824 60.329 C -4.564 58.239 -3.264 55.159 -3.264 51.509 Z"/><path fill="#34A853" d="M -14.754 63.239 C -11.514 63.239 -8.804 62.159 -6.824 60.329 L -10.684 57.329 C -11.764 58.049 -13.134 58.489 -14.754 58.489 C -17.884 58.489 -20.534 56.379 -21.484 53.529 L -25.464 53.529 L -25.464 56.619 C -23.494 60.539 -19.444 63.239 -14.754 63.239 Z"/><path fill="#FBBC05" d="M -21.484 53.529 C -21.734 52.809 -21.864 52.039 -21.864 51.239 C -21.864 50.439 -21.724 49.669 -21.484 48.949 L -21.484 45.859 L -25.464 45.859 C -26.284 47.479 -26.754 49.299 -26.754 51.239 C -26.754 53.179 -26.284 54.999 -25.464 56.619 L -21.484 53.529 Z"/><path fill="#EA4335" d="M -14.754 43.989 C -12.984 43.989 -11.404 44.599 -10.154 45.789 L -6.734 41.939 C -8.804 39.869 -11.514 38.489 -14.754 38.489 C -19.444 38.489 -23.494 41.189 -25.464 45.859 L -21.484 48.949 C -20.534 46.099 -17.884 43.989 -14.754 43.989 Z"/></g></svg>
                 Entrar com o Google
             </button>
         </div>
+    </div>
+
+    <div class="brand-header" id="brand-header">
+        <img src="https://drive.google.com/uc?export=view&id=1FoMog1y6r_9tjd5qjOP-TY1r853fD6_P" alt="Logo Novagne">
     </div>
 
     <div class="user-header" id="user-header">
@@ -497,12 +512,12 @@
 
         function logoutFirebase() {
             auth.signOut().then(() => {
-                // Apenas desloga silenciosamente
+                // Apenas desloga silenciosamente, a tela de login vai aparecer
             });
         }
 
         auth.onAuthStateChanged(user => {
-            // Remove a tela de carregamento suavemente quando a nuvem responde
+            // Some com a tela de carregamento suavemente
             const loadingScreen = document.getElementById('loading-screen');
             if (loadingScreen) {
                 loadingScreen.style.opacity = '0';
@@ -522,6 +537,7 @@
                 
                 document.getElementById('main-app').classList.add('visible');
                 document.getElementById('user-header').classList.add('visible');
+                document.getElementById('brand-header').classList.add('visible'); // Mostra logo do topo
                 
                 document.getElementById('display-name').innerText = nomeExibicao;
                 document.getElementById('display-avatar').src = urlFoto;
@@ -538,6 +554,7 @@
                 
                 document.getElementById('main-app').classList.remove('visible');
                 document.getElementById('user-header').classList.remove('visible');
+                document.getElementById('brand-header').classList.remove('visible'); // Esconde logo do topo
             }
         });
 
@@ -742,7 +759,7 @@
         }
 
         // ==========================================
-        // AUTO-ORDENAÇÃO: JOGA CONCLUÍDOS PARA O FINAL
+        // AUTO-ORDENAÇÃO: MANTÉM OS PENDENTES NO TOPO
         // ==========================================
         function reordenarTabela(tipo) {
             const tbody = document.querySelector(`#res-${tipo} tbody`);
@@ -801,11 +818,23 @@
                 salvarLinhaNoHistorico(tipo, tr); 
             } else { 
                 tr.classList.remove('linha-selecionada'); 
+                
+                // NOVO: Quando desmarcar (clicar sem querer), a linha sobe pro TOPO da tabela imediatamente
+                const tbody = tr.closest('tbody');
+                tbody.insertBefore(tr, tbody.firstChild);
+                
+                if (tipo === 'cadastro') {
+                    const detailsRow = document.getElementById(tr.id + '-details');
+                    if (detailsRow) tbody.insertBefore(detailsRow, tr.nextSibling);
+                }
             }
             
             if (tipo === 'cadastro') {
                 const detailsRow = document.getElementById(tr.id + '-details');
-                if (detailsRow) detailsRow.querySelectorAll('.sub-chk').forEach(sub => sub.checked = chk.checked);
+                if (detailsRow) {
+                    // Sincroniza as 4 caixinhas de baixo
+                    detailsRow.querySelectorAll('.sub-chk').forEach(sub => sub.checked = chk.checked);
+                }
             }
             
             reordenarTabela(tipo); 
@@ -878,7 +907,7 @@
                 showToast(`Copiado: ${btn.textContent}`);
                 const cor = btn.style.color; const sombra = btn.style.textShadow;
                 btn.style.color = "#28a745"; btn.style.textShadow = "0 0 10px rgba(40,167,69,0.5)"; btn.style.fontWeight = "bold";
-                setTimeout(() => { btn.style.color = cor; btn.style.textShadow = sombra; btn.style.fontWeight = btn.classList.contains('obs-copy-btn') ? "800" : "500"; }, 800);
+                setTimeout(() => { btn.style.color = cor; btn.style.textShadow = sombra; btn.style.fontWeight = btn.classList.contains('obs-copy-btn') ? "800" : "800"; }, 800);
             });
         }
 
@@ -954,7 +983,7 @@
                 const mesesOrdenados = Array.from(meses).sort().reverse();
                 selMes.innerHTML = '<option value="">Mês Atual</option>';
                 mesesOrdenados.forEach(mes => {
-                    const [ano, numMes] = split('-');
+                    const [ano, numMes] = mes.split('-');
                     const nomeMes = new Date(ano, numMes - 1).toLocaleString('pt-BR', { month: 'long' });
                     selMes.innerHTML += `<option value="${mes}">${nomeMes.charAt(0).toUpperCase() + nomeMes.slice(1)} / ${ano}</option>`;
                 });
