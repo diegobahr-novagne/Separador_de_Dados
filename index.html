@@ -96,14 +96,19 @@
         .btn-meta:hover { background: #444; color: #fff; border-color: #4dabf7; }
         .progress-bar-bg { width: 100%; height: 12px; background: #111; border-radius: 8px; overflow: hidden; box-shadow: inset 0 2px 5px rgba(0,0,0,0.8); position: relative; z-index: 2; }
         .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #0056b3, #00d4ff); width: 0%; transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 0 15px rgba(0, 123, 255, 0.5); }
-        
+        .meta-success { border-color: #ffc107; box-shadow: 0 0 30px rgba(255, 193, 7, 0.15); background: rgba(255, 193, 7, 0.05); }
+        .meta-success .progress-bar-fill { background: linear-gradient(90deg, #ffc107, #ffe066); box-shadow: 0 0 20px rgba(255, 193, 7, 0.6); }
+
+        /* --- SMART PASTE ZONE --- */
         .smart-paste-zone { border: 2px dashed #444; border-radius: 12px; padding: 15px; text-align: center; background-color: #151515; cursor: pointer; transition: all 0.3s ease; margin-bottom: 15px; outline: none; display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 80px; flex-shrink: 0; }
         .mode-cadastro .smart-paste-zone:hover, .mode-cadastro .smart-paste-zone:focus { border-color: #007bff; background-color: #1a1a1a; box-shadow: 0 0 15px rgba(0,123,255,0.1); }
         .mode-boletos .smart-paste-zone:hover, .mode-boletos .smart-paste-zone:focus { border-color: #28a745; background-color: #1a1a1a; box-shadow: 0 0 15px rgba(40,167,69,0.1); }
         .paste-icon { font-size: 20px; margin-bottom: 5px; opacity: 0.8; }
         .smart-paste-zone h3 { margin: 0 0 4px 0; color: #fff; font-size: 15px; font-weight: 700; }
         .smart-paste-zone p { margin: 0; color: #888; font-size: 12px; }
+        textarea { display: none; } 
 
+        /* --- BOTÕES --- */
         .button-group { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; justify-content: center; flex-shrink: 0;}
         button { font-family: 'Inter', sans-serif; padding: 10px 20px; color: #ccc; border: 1px solid transparent; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; transition: all 0.2s ease; background-color: #2a2a2a; }
         button:hover { color: white; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
@@ -180,8 +185,13 @@
         .linha-destaque td:first-child { border-left: 3px solid #ffc107; }
         .linha-selecionada td { background-color: rgba(0, 0, 0, 0.4) !important; color: #555 !important; text-decoration: line-through; }
         .linha-selecionada .copy-button { color: #555 !important; text-decoration: line-through; }
+        
         .details-row { display: none; }
-        .details-row td { background-color: #151515; border-top: none; padding: 8px 20px 15px 20px; color: #ccc !important; }
+        .details-row td { background-color: #151515; border-top: none; padding: 15px 20px 20px 20px; color: #ccc !important; }
+        
+        /* NOVO: Tag de Observação da Coluna S */
+        .obs-tag { color: #ffc107; font-size: 12px; font-weight: 700; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px dashed #333; display: block; letter-spacing: 0.5px;}
+        
         .sub-task-container { display: flex; flex-direction: column; gap: 8px; padding-left: 35px; }
         .sub-task-label { font-size: 11px; font-weight: 600; color: #bbb; cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center;}
         .sub-task-label:hover { color: #ffc107; }
@@ -190,6 +200,9 @@
         
         .history-list { flex: 1; overflow-y: auto; min-height: 0; padding-right: 5px; }
         .empty-state { padding: 40px 20px; text-align: center; color: #666; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(255,255,255,0.02); border-radius: 8px; border: 1px dashed #333; height: 100%; box-sizing: border-box; }
+        .empty-state span { font-size: 40px; margin-bottom: 10px; opacity: 0.5; }
+        .empty-state p { margin: 0; font-size: 14px; font-weight: 500; }
+
         .historico-item { background-color: #1a1a1a; padding: 12px 15px; margin-bottom: 8px; border-radius: 8px; border: 1px solid #333; font-size: 13px; color: #ccc; display: flex; align-items: center; gap: 15px; transition: 0.2s; }
         .historico-item:hover { background-color: #222; border-color: #444; transform: translateX(5px); }
         .time-badge { font-family: 'Inter', sans-serif; font-weight: 600; background: #000; padding: 3px 6px; border-radius: 4px; color: #888; font-size: 11px; border: 1px solid #222; }
@@ -257,19 +270,25 @@
             </div>
 
             <div id="cadastro-input-tab" class="tab-pane active">
+                
                 <div class="meta-container" id="meta-box-cadastro">
                     <div class="meta-header">
-                        <div class="meta-text-title"><span id="meta-title-prefix">META DIÁRIA: </span><span id="meta-val-display" style="color:#4dabf7; margin-left:6px;">0</span></div>
-                        <div class="meta-text-count"><strong id="progress-count" style="color:#fff;">0</strong> contratos hoje</div>
+                        <div class="meta-text-title">
+                            <span id="meta-title-prefix">META DIÁRIA: </span> 
+                            <span id="meta-val-display" style="color:#4dabf7; margin-left:6px;">0</span>
+                        </div>
+                        <div class="meta-text-count"><strong id="progress-count" style="color:#fff;">0</strong> contratos processados hoje</div>
                         <button class="btn-meta" onclick="editarMeta()">Ajustar Meta</button>
                     </div>
-                    <div class="progress-bar-bg"><div class="progress-bar-fill" id="progresso-fill"></div></div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill" id="progresso-fill"></div>
+                    </div>
                 </div>
 
                 <div class="smart-paste-zone" id="paste-zone-cadastro" tabindex="0">
                     <div class="paste-icon">📋</div>
                     <h3>Pronto para receber contratos</h3>
-                    <p>Clique aqui e pressione <b>Ctrl + V</b> para processar instantaneamente.</p>
+                    <p>Clique aqui e pressione <b>Ctrl + V</b> para processar os dados instantaneamente.</p>
                 </div>
 
                 <div class="button-group">
@@ -296,6 +315,7 @@
                 <div id="export-container-cadastro" class="export-container">
                     <div class="export-header">
                         <h2 id="est-title-cadastro" style="color: #4dabf7; margin: 0; text-align: left; width: 100%;">Estatísticas de Cadastro</h2>
+                        
                         <div class="export-controls data-html2canvas-ignore hide-on-print-only">
                             <div class="export-controls-left">
                                 <div class="stat-btn-group">
@@ -317,12 +337,8 @@
                     </div>
 
                     <div id="weekly-breakdown-cadastro" class="weekly-breakdown" style="display: none;"></div>
-                    
                     <div id="ranking-cadastro" class="ranking-container"></div>
-
-                    <div class="chart-wrapper">
-                        <canvas id="chart-cadastro"></canvas>
-                    </div>
+                    <div class="chart-wrapper"><canvas id="chart-cadastro"></canvas></div>
                 </div>
             </div>
         </div>
@@ -336,6 +352,7 @@
             </div>
 
             <div id="boletos-input-tab" class="tab-pane active">
+                
                 <div class="smart-paste-zone" id="paste-zone-boletos" tabindex="0">
                     <div class="paste-icon">📋</div>
                     <h3>Pronto para receber boletos</h3>
@@ -347,6 +364,7 @@
                     <button class="btn-bol" onclick="copiarSelecionados('boletos')" id="btn-copy-boletos">Copiar Selecionados</button>
                     <button class="btn-limpar" onclick="limpar('boletos')">Limpar Tabela</button>
                 </div>
+                
                 <div class="table-responsive" id="res-boletos"></div>
             </div>
 
@@ -365,6 +383,7 @@
                 <div id="export-container-boletos" class="export-container">
                     <div class="export-header">
                         <h2 id="est-title-boletos" style="color: #28a745; margin: 0; text-align: left; width: 100%;">Estatísticas de Boletos</h2>
+                        
                         <div class="export-controls data-html2canvas-ignore hide-on-print-only">
                             <div class="export-controls-left">
                                 <div class="stat-btn-group">
@@ -386,12 +405,8 @@
                     </div>
 
                     <div id="weekly-breakdown-boletos" class="weekly-breakdown" style="display: none;"></div>
-                    
                     <div id="ranking-boletos" class="ranking-container"></div>
-
-                    <div class="chart-wrapper">
-                        <canvas id="chart-boletos"></canvas>
-                    </div>
+                    <div class="chart-wrapper"><canvas id="chart-boletos"></canvas></div>
                 </div>
             </div>
         </div>
@@ -665,16 +680,23 @@
                 <td><button class="copy-button" onclick="copiar(this)">${cols[4]||''}</button></td>`;
             
             if (tipo === 'cadastro') {
+                // NOVO: Captura a coluna S (índice 18), passa para Maiúsculo e remove traços
+                let obsText = (cols[18] || '').toUpperCase().replace(/-/g, '').trim();
+                let obsHtml = obsText ? `<span class="obs-tag">📌 OBS: ${obsText}</span>` : '';
+
                 row += `<td><button class="copy-button" onclick="copiar(this)">${cols[5]||''}</button></td>
                         <td><button class="copy-button" onclick="copiar(this)">${cols[6]||''}</button></td>
                         <td><button class="copy-button" onclick="copiar(this)">${cols[8]||''}</button></td>
                         <td><button class="copy-button" onclick="copiar(this)">${cols[11]||''}</button></td></tr>
-                        <tr id="${rowId}-details" class="details-row"><td colspan="8"><div class="sub-task-container">
-                            <label class="sub-task-label"><input type="checkbox" class="sub-chk" onchange="subChkClick(this)"> CADASTRO DO CUMPRIMENTO DE SENTENÇA</label>
-                            <label class="sub-task-label"><input type="checkbox" class="sub-chk" onchange="subChkClick(this)"> CADASTRO DA PARCELA E PREENCHIMENTO DO HISTÓRICO</label>
-                            <label class="sub-task-label"><input type="checkbox" class="sub-chk" onchange="subChkClick(this)"> ALTERAR DA ABA CADASTRO PARA CADASTRADOS</label>
-                            <label class="sub-task-label"><input type="checkbox" class="sub-chk" onchange="subChkClick(this)"> COLOCAR CONTRATO NA ABA DISTRIBUIR (PLANILHA BASE)</label>
-                        </div></td></tr>`;
+                        <tr id="${rowId}-details" class="details-row"><td colspan="8">
+                            ${obsHtml}
+                            <div class="sub-task-container">
+                                <label class="sub-task-label"><input type="checkbox" class="sub-chk" onchange="subChkClick(this)"> CADASTRO DO CUMPRIMENTO DE SENTENÇA</label>
+                                <label class="sub-task-label"><input type="checkbox" class="sub-chk" onchange="subChkClick(this)"> CADASTRO DA PARCELA E PREENCHIMENTO DO HISTÓRICO</label>
+                                <label class="sub-task-label"><input type="checkbox" class="sub-chk" onchange="subChkClick(this)"> ALTERAR DA ABA CADASTRO PARA CADASTRADOS</label>
+                                <label class="sub-task-label"><input type="checkbox" class="sub-chk" onchange="subChkClick(this)"> COLOCAR CONTRATO NA ABA DISTRIBUIR (PLANILHA BASE)</label>
+                            </div>
+                        </td></tr>`;
             } else { row += `</tr>`; }
             return row;
         }
@@ -769,7 +791,6 @@
             resDiv.innerHTML = ''; resDiv.classList.remove('has-data'); showToast('Tabela limpa.');
         }
 
-        /* --- HISTÓRICO E ESTATÍSTICAS --- */
         function preencherFiltrosMesHist(tipo) {
             const select = document.getElementById(`filtro-mes-hist-${tipo}`);
             if(!select) return;
