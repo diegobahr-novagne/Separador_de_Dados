@@ -32,7 +32,7 @@
 
         .brand-header { position: absolute; top: 15px; left: 20px; display: none; align-items: center; z-index: 100; }
         .brand-header.visible { display: flex; animation: fadeIn 0.8s ease forwards; }
-        .brand-header img { height: 35px; object-fit: contain; }
+        .brand-header img { height: 35px; object-fit: contain; filter: drop-shadow(0 2px 5px rgba(0,0,0,0.5));}
 
         /* --- TELA DE CARREGAMENTO --- */
         #loading-screen {
@@ -284,14 +284,14 @@
 <body class="mode-cadastro">
 
     <div id="loading-screen">
-        <img src="https://drive.google.com/uc?export=view&id=1FoMog1y6r_9tjd5qjOP-TY1r853fD6_P" alt="Logo Novagne" class="company-logo pulse-logo">
+        <img src="https://lh3.googleusercontent.com/d/1FoMog1y6r_9tjd5qjOP-TY1r853fD6_P" alt="Logo Novagne" class="company-logo pulse-logo">
         <div class="spinner"></div>
         <p>Sincronizando com a nuvem...</p>
     </div>
 
     <div id="login-screen">
         <div class="login-box">
-            <img src="https://drive.google.com/uc?export=view&id=1FoMog1y6r_9tjd5qjOP-TY1r853fD6_P" alt="Logo Novagne" class="company-logo">
+            <img src="https://lh3.googleusercontent.com/d/1FoMog1y6r_9tjd5qjOP-TY1r853fD6_P" alt="Logo Novagne" class="company-logo">
             <h2>Acesso Restrito</h2>
             <p>Faça login com sua conta corporativa para acessar o sistema.</p>
             
@@ -303,7 +303,7 @@
     </div>
 
     <div class="brand-header" id="brand-header">
-        <img src="https://drive.google.com/uc?export=view&id=1FoMog1y6r_9tjd5qjOP-TY1r853fD6_P" alt="Logo Novagne">
+        <img src="https://lh3.googleusercontent.com/d/1FoMog1y6r_9tjd5qjOP-TY1r853fD6_P" alt="Logo Novagne">
     </div>
 
     <div class="user-header" id="user-header">
@@ -502,7 +502,7 @@
         let currentUserLogado = null; 
 
         /* ========================================================
-           SISTEMA DE LOGIN DO GOOGLE & LOADING SCREEN
+           SISTEMA DE LOGIN DO GOOGLE E TELA DE CARREGAMENTO
            ======================================================== */
         function loginGoogle() {
             auth.signInWithPopup(provider).catch(error => {
@@ -517,7 +517,6 @@
         }
 
         auth.onAuthStateChanged(user => {
-            // Some com a tela de carregamento suavemente
             const loadingScreen = document.getElementById('loading-screen');
             if (loadingScreen) {
                 loadingScreen.style.opacity = '0';
@@ -537,7 +536,7 @@
                 
                 document.getElementById('main-app').classList.add('visible');
                 document.getElementById('user-header').classList.add('visible');
-                document.getElementById('brand-header').classList.add('visible'); // Mostra logo do topo
+                document.getElementById('brand-header').classList.add('visible'); 
                 
                 document.getElementById('display-name').innerText = nomeExibicao;
                 document.getElementById('display-avatar').src = urlFoto;
@@ -554,7 +553,7 @@
                 
                 document.getElementById('main-app').classList.remove('visible');
                 document.getElementById('user-header').classList.remove('visible');
-                document.getElementById('brand-header').classList.remove('visible'); // Esconde logo do topo
+                document.getElementById('brand-header').classList.remove('visible'); 
             }
         });
 
@@ -758,9 +757,6 @@
             return row;
         }
 
-        // ==========================================
-        // AUTO-ORDENAÇÃO: MANTÉM OS PENDENTES NO TOPO
-        // ==========================================
         function reordenarTabela(tipo) {
             const tbody = document.querySelector(`#res-${tipo} tbody`);
             if (!tbody) return;
@@ -819,7 +815,6 @@
             } else { 
                 tr.classList.remove('linha-selecionada'); 
                 
-                // NOVO: Quando desmarcar (clicar sem querer), a linha sobe pro TOPO da tabela imediatamente
                 const tbody = tr.closest('tbody');
                 tbody.insertBefore(tr, tbody.firstChild);
                 
@@ -832,7 +827,6 @@
             if (tipo === 'cadastro') {
                 const detailsRow = document.getElementById(tr.id + '-details');
                 if (detailsRow) {
-                    // Sincroniza as 4 caixinhas de baixo
                     detailsRow.querySelectorAll('.sub-chk').forEach(sub => sub.checked = chk.checked);
                 }
             }
@@ -854,6 +848,10 @@
                     salvarLinhaNoHistorico('cadastro', mainRow); 
                 } else { 
                     mainRow.classList.remove('linha-selecionada'); 
+                    
+                    const tbody = mainRow.closest('tbody');
+                    tbody.insertBefore(mainRow, tbody.firstChild);
+                    tbody.insertBefore(detailsRow, mainRow.nextSibling);
                 }
                 reordenarTabela('cadastro');
             }
