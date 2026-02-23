@@ -284,14 +284,14 @@
 <body class="mode-cadastro">
 
     <div id="loading-screen">
-        <img src="https://lh3.googleusercontent.com/d/1FoMog1y6r_9tjd5qjOP-TY1r853fD6_P" alt="Logo Novagne" class="company-logo pulse-logo">
+        <img src="logo.png" alt="Logo Novagne" class="company-logo pulse-logo">
         <div class="spinner"></div>
         <p>Sincronizando com a nuvem...</p>
     </div>
 
     <div id="login-screen">
         <div class="login-box">
-            <img src="https://lh3.googleusercontent.com/d/1FoMog1y6r_9tjd5qjOP-TY1r853fD6_P" alt="Logo Novagne" class="company-logo">
+            <img src="logo.png" alt="Logo Novagne" class="company-logo">
             <h2>Acesso Restrito</h2>
             <p>Faça login com sua conta corporativa para acessar o sistema.</p>
             
@@ -303,7 +303,7 @@
     </div>
 
     <div class="brand-header" id="brand-header">
-        <img src="https://lh3.googleusercontent.com/d/1FoMog1y6r_9tjd5qjOP-TY1r853fD6_P" alt="Logo Novagne">
+        <img src="logo.png" alt="Logo Novagne">
     </div>
 
     <div class="user-header" id="user-header">
@@ -757,6 +757,9 @@
             return row;
         }
 
+        // ==========================================
+        // AUTO-ORDENAÇÃO: MANTÉM OS PENDENTES NO TOPO
+        // ==========================================
         function reordenarTabela(tipo) {
             const tbody = document.querySelector(`#res-${tipo} tbody`);
             if (!tbody) return;
