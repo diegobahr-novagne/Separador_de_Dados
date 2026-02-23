@@ -14,7 +14,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 
     <style>
-        /* --- ESTILOS GERAIS --- */
+        /* --- ESTILOS GERAIS (LAYOUT COMPACTO) --- */
         body { 
             font-family: 'Inter', sans-serif; background-color: #0d0d0d; color: #e0e0e0; 
             margin: 0; padding: 8px 15px; display: flex; flex-direction: column; align-items: center; 
@@ -187,7 +187,7 @@
         .details-row { display: none; }
         .details-row td { background-color: #151515; border-top: none; padding: 10px 15px 15px 15px; color: #ccc !important; }
         
-        /* NOVO: Tag de Observação Alinhada na mesma linha usando Flexbox */
+        /* Observação alinhada e bloqueada na mesma linha */
         .obs-tag { 
             display: flex; align-items: flex-start; gap: 6px; 
             color: #888; font-size: 12px; font-weight: 700; margin-bottom: 8px; padding-bottom: 8px; 
@@ -678,11 +678,8 @@
                 <td><button class="copy-button" onclick="copiar(this)">${cols[4]||''}</button></td>`;
             
             if (tipo === 'cadastro') {
-                // Remove acentos/Ç, fica maiúsculo, tira traços.
                 let rawObs = (cols[18] || '').toUpperCase();
                 let obsText = rawObs.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/-/g, '').trim();
-                
-                // Botão de copiar a OBS interativo na mesma linha do "PIN"
                 let obsHtml = obsText ? `<div class="obs-tag"><span style="flex-shrink:0;">📌 OBS:</span> <button class="obs-copy-btn" onclick="copiar(this)">${obsText}</button></div>` : '';
 
                 row += `<td><button class="copy-button" onclick="copiar(this)">${cols[5]||''}</button></td>
@@ -702,21 +699,40 @@
             return row;
         }
 
-        // Função para subir as linhas para o topo
-        function moverLinhaParaTopo(tr, tipo) {
-            const tbody = tr.closest('tbody');
+        // ==========================================
+        // NOVA FUNÇÃO: AUTO-ORDENAÇÃO DE LINHAS
+        // ==========================================
+        function reordenarTabela(tipo) {
+            const tbody = document.querySelector(`#res-${tipo} tbody`);
             if (!tbody) return;
             
-            // Move a linha principal pro topo
-            tbody.insertBefore(tr, tbody.firstChild);
+            const rows = Array.from(tbody.querySelectorAll('tr.data-row'));
+            const uncheckedRows = [];
+            const checkedRows = [];
             
-            // Se for cadastro, a linha de detalhes sobe grudada logo abaixo dela
-            if (tipo === 'cadastro') {
-                const detailsRow = document.getElementById(tr.id + '-details');
-                if (detailsRow) {
-                    tbody.insertBefore(detailsRow, tr.nextSibling);
+            // Separa quem está pendente de quem já foi concluído
+            rows.forEach(tr => {
+                if (tr.querySelector('.chk').checked) checkedRows.push(tr);
+                else uncheckedRows.push(tr);
+            });
+            
+            // Re-insere os PENDENTES primeiro (ficam no topo)
+            uncheckedRows.forEach(tr => {
+                tbody.appendChild(tr);
+                if (tipo === 'cadastro') {
+                    const d = document.getElementById(tr.id + '-details');
+                    if(d) tbody.appendChild(d);
                 }
-            }
+            });
+            
+            // Re-insere os CONCLUÍDOS por último (vão para o fundo)
+            checkedRows.forEach(tr => {
+                tbody.appendChild(tr);
+                if (tipo === 'cadastro') {
+                    const d = document.getElementById(tr.id + '-details');
+                    if(d) tbody.appendChild(d);
+                }
+            });
         }
 
         function salvarLinhaNoHistorico(tipo, trElement) {
@@ -739,11 +755,11 @@
         function chkClick(chk) {
             const tr = chk.closest('tr');
             const tipo = currentMode;
+            
             if (chk.checked) { 
                 tr.classList.add('linha-selecionada'); 
                 tr.classList.remove('linha-destaque'); 
                 salvarLinhaNoHistorico(tipo, tr); 
-                moverLinhaParaTopo(tr, tipo); // NOVO: Move ao completar
             } else { 
                 tr.classList.remove('linha-selecionada'); 
             }
@@ -752,6 +768,8 @@
                 const detailsRow = document.getElementById(tr.id + '-details');
                 if (detailsRow) detailsRow.querySelectorAll('.sub-chk').forEach(sub => sub.checked = chk.checked);
             }
+            
+            reordenarTabela(tipo); 
             atualizarDestaques(tipo);
         }
 
@@ -766,10 +784,10 @@
                 if (allChecked) { 
                     mainRow.classList.add('linha-selecionada'); 
                     salvarLinhaNoHistorico('cadastro', mainRow); 
-                    moverLinhaParaTopo(mainRow, 'cadastro'); // NOVO: Move ao completar as 4 caixas
                 } else { 
                     mainRow.classList.remove('linha-selecionada'); 
                 }
+                reordenarTabela('cadastro');
             }
             atualizarDestaques('cadastro');
         }
@@ -792,7 +810,27 @@
         function marcarTodos(tipo) {
             const chks = document.querySelectorAll(`#res-${tipo} .data-row .chk`);
             const status = !Array.from(chks).every(c => c.checked);
-            chks.forEach(c => { if (c.checked !== status) { c.checked = status; chkClick(c); } });
+            
+            chks.forEach(c => { 
+                if (c.checked !== status) { 
+                    c.checked = status; 
+                    const tr = c.closest('tr');
+                    if (status) { 
+                        tr.classList.add('linha-selecionada'); 
+                        tr.classList.remove('linha-destaque'); 
+                        salvarLinhaNoHistorico(tipo, tr); 
+                    } else { 
+                        tr.classList.remove('linha-selecionada'); 
+                    }
+                    if (tipo === 'cadastro') {
+                        const detailsRow = document.getElementById(tr.id + '-details');
+                        if (detailsRow) detailsRow.querySelectorAll('.sub-chk').forEach(sub => sub.checked = status);
+                    }
+                } 
+            });
+            
+            reordenarTabela(tipo);
+            atualizarDestaques(tipo);
             document.getElementById(`btn-toggle-${tipo}`).textContent = status ? 'Desmarcar Todos' : 'Marcar Todos';
         }
 
@@ -801,7 +839,7 @@
                 showToast(`Copiado: ${btn.textContent}`);
                 const cor = btn.style.color; const sombra = btn.style.textShadow;
                 btn.style.color = "#28a745"; btn.style.textShadow = "0 0 10px rgba(40,167,69,0.5)"; btn.style.fontWeight = "bold";
-                setTimeout(() => { btn.style.color = cor; btn.style.textShadow = sombra; btn.style.fontWeight = "800"; }, 800);
+                setTimeout(() => { btn.style.color = cor; btn.style.textShadow = sombra; btn.style.fontWeight = btn.classList.contains('obs-copy-btn') ? "800" : "500"; }, 800);
             });
         }
 
