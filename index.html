@@ -25,32 +25,39 @@
         ::-webkit-scrollbar-thumb { background: #444; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #666; }
 
-        /* --- LOGO DA EMPRESA --- */
-        .company-logo { width: 150px; margin-bottom: 20px; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.5)); }
-        .pulse-logo { animation: pulseLogo 2s infinite; }
-        @keyframes pulseLogo { 0%, 100% { transform: scale(1); opacity: 0.7; } 50% { transform: scale(1.05); opacity: 1; } }
-
-        .brand-header { position: absolute; top: 15px; left: 20px; display: none; align-items: center; z-index: 100; }
+        /* --- LOGO DA EMPRESA (VISUAL REFINADO) --- */
+        .logo-wrapper {
+            background-color: #151515; border: 1px solid #333; border-radius: 16px; padding: 15px 25px;
+            margin-bottom: 25px; display: inline-flex; justify-content: center; align-items: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .company-logo { width: 130px; object-fit: contain; display: block; }
+        
+        .brand-header { 
+            position: absolute; top: 15px; left: 20px; display: none; align-items: center; z-index: 100; 
+            background: rgba(26, 26, 26, 0.8); backdrop-filter: blur(5px);
+            padding: 8px 18px; border-radius: 30px; border: 1px solid #333; box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
         .brand-header.visible { display: flex; animation: fadeIn 0.8s ease forwards; }
-        .brand-header img { height: 35px; object-fit: contain; filter: drop-shadow(0 2px 5px rgba(0,0,0,0.5));}
+        .brand-header img { height: 26px; object-fit: contain; }
+
+        .loading-glow {
+            border-color: rgba(0, 123, 255, 0.4); box-shadow: 0 0 40px rgba(0, 123, 255, 0.15), inset 0 0 20px rgba(0, 123, 255, 0.05);
+            animation: pulseWrapper 2s infinite;
+        }
+        @keyframes pulseWrapper { 0%, 100% { transform: scale(1); box-shadow: 0 0 30px rgba(0, 123, 255, 0.1); } 50% { transform: scale(1.03); box-shadow: 0 0 50px rgba(0, 123, 255, 0.3); } }
 
         /* --- TELA DE CARREGAMENTO --- */
         #loading-screen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #0d0d0d; z-index: 99999;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            transition: opacity 0.5s ease, visibility 0.5s;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0d0d0d; z-index: 99999;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.5s ease, visibility 0.5s;
         }
         .spinner {
-            width: 45px; height: 45px; border: 4px solid rgba(255, 255, 255, 0.1);
-            border-left-color: #007bff; border-radius: 50%;
-            animation: spin 1s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-            margin-bottom: 20px;
+            width: 45px; height: 45px; border: 4px solid rgba(255, 255, 255, 0.1); border-left-color: #007bff; border-radius: 50%;
+            animation: spin 1s cubic-bezier(0.4, 0, 0.2, 1) infinite; margin-bottom: 20px;
         }
         @keyframes spin { to { transform: rotate(360deg); } }
-        #loading-screen p {
-            color: #888; font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
-        }
+        #loading-screen p { color: #888; font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin: 0; }
 
         /* --- TELA DE LOGIN --- */
         #login-screen {
@@ -58,9 +65,9 @@
             display: none; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.5s ease; opacity: 0;
         }
         .login-box {
-            background: #1a1a1a; padding: 40px; border-radius: 16px; border: 1px solid #333; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.8); max-width: 350px; width: 90%;
+            background: #1a1a1a; padding: 40px 30px; border-radius: 16px; border: 1px solid #333; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.8); max-width: 380px; width: 90%; display: flex; flex-direction: column; align-items: center;
         }
-        .login-box h2 { font-size: 22px; margin-bottom: 10px; color: #fff; }
+        .login-box h2 { font-size: 20px; margin-top: 0; margin-bottom: 8px; color: #fff; }
         .login-box p { color: #888; font-size: 13px; margin-bottom: 30px; line-height: 1.5; }
         
         .btn-google {
@@ -86,11 +93,24 @@
 
         h2 { color: #fff; margin-top: 0; margin-bottom: 8px; font-weight: 700; letter-spacing: 1px; font-size: 18px;}
 
-        /* --- NAVEGAÇÃO --- */
-        .main-nav { display: flex; justify-content: center; gap: 15px; margin-bottom: 10px; align-self: center; flex-shrink: 0; }
-        .main-nav-btn { font-family: 'Inter', sans-serif; background-color: #2a2a2a; border: 1px solid transparent; color: #ccc; padding: 8px 0; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; border-radius: 8px; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; align-items: center; justify-content: center; gap: 8px; width: 160px; }
-        .main-nav-btn:hover { color: #fff; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
-        .main-nav-btn:active { transform: scale(0.97); box-shadow: none !important; }
+        /* --- NAVEGAÇÃO SUPERIOR (NOVO DESIGN MODERNO) --- */
+        .main-nav { 
+            display: flex; justify-content: center; gap: 6px; margin-bottom: 12px; align-self: center; flex-shrink: 0; 
+            background: rgba(255, 255, 255, 0.03); padding: 6px; border-radius: 40px; 
+            border: 1px solid rgba(255,255,255,0.05); box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);
+        }
+        .main-nav-btn { 
+            font-family: 'Inter', sans-serif; background-color: transparent; border: none; color: #888; 
+            padding: 10px 25px; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; 
+            border-radius: 30px; cursor: pointer; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
+            display: flex; align-items: center; justify-content: center; gap: 8px; min-width: 170px; 
+        }
+        /* Efeito de passar o mouse em botões inativos */
+        .main-nav-btn:hover { 
+            color: #fff; background: rgba(255, 255, 255, 0.05); transform: translateY(-1px); 
+        }
+        /* Efeito ao clicar (aperto) */
+        .main-nav-btn:active { transform: scale(0.95); }
         
         .sub-nav { display: flex; gap: 10px; margin-bottom: 10px; border-bottom: 2px solid #222; padding-bottom: 5px; flex-shrink: 0; }
         .sub-nav-btn { font-family: 'Inter', sans-serif; background: transparent; border: none; color: #888; font-size: 11px; font-weight: 600; text-transform: uppercase; padding: 6px 15px; cursor: pointer; transition: 0.3s; position: relative; }
@@ -99,7 +119,7 @@
         .sub-nav-btn.active::after { transform: scaleX(1); }
         .sub-nav-btn.active { color: #fff; font-weight: 800; }
 
-        /* --- WORKSPACES --- */
+        /* --- WORKSPACES E TRANSIÇÕES FLEX --- */
         .workspace { display: none; flex-direction: column; flex: 1; min-height: 0; animation: fadeIn 0.4s ease forwards; }
         .workspace.active { display: flex; }
         .tab-pane { display: none; width: 100%; flex-direction: column; flex: 1; min-height: 0; animation: slideUp 0.3s ease forwards; }
@@ -107,11 +127,21 @@
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
+        /* --- CORES POR MODO E EFEITOS GLOW DOS BOTÕES --- */
         .mode-cadastro .container { border-top-color: #007bff; box-shadow: 0 0 40px rgba(0, 123, 255, 0.12); }
-        .mode-cadastro .main-nav-btn.active { background: linear-gradient(180deg, #0056b3, #004494); color: white; border-color: #004494; box-shadow: 0 4px 15px rgba(0, 123, 255, 0.4); }
+        .mode-cadastro .main-nav-btn.active { 
+            background: linear-gradient(135deg, #0056b3 0%, #007bff 100%); color: white; 
+            box-shadow: 0 6px 20px rgba(0, 123, 255, 0.6), inset 0 1px 1px rgba(255,255,255,0.3); 
+            transform: translateY(-2px); 
+        }
         .mode-cadastro .sub-nav-btn.active::after { background: #007bff; }
+        
         .mode-boletos .container { border-top-color: #28a745; box-shadow: 0 0 40px rgba(40, 167, 69, 0.12); }
-        .mode-boletos .main-nav-btn.active { background: linear-gradient(180deg, #1e7e34, #155724); color: white; border-color: #155724; box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4); }
+        .mode-boletos .main-nav-btn.active { 
+            background: linear-gradient(135deg, #155724 0%, #28a745 100%); color: white; 
+            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.6), inset 0 1px 1px rgba(255,255,255,0.3); 
+            transform: translateY(-2px); 
+        }
         .mode-boletos .sub-nav-btn.active::after { background: #28a745; }
 
         /* --- COMPONENTES --- */
@@ -207,20 +237,13 @@
         #tbl-boletos .data-row td { color: #00e676; font-weight: 500; }
         #tbl-boletos .data-row .copy-button { color: #00e676; }
         
-        /* ESTILO DA LINHA EM DESTAQUE E SEUS BOTÕES */
         .linha-destaque td { background: linear-gradient(90deg, rgba(255, 193, 7, 0.15) 0%, transparent 100%) !important; color: #ffca2c !important; font-weight: 800 !important;}
         .linha-destaque td:first-child { border-left: 3px solid #ffc107; }
         .linha-destaque .copy-button { 
-            color: #ffca2c !important; 
-            font-weight: 800 !important; 
-            text-decoration: underline dashed rgba(255,193,7,0.4); 
-            text-underline-offset: 3px; 
+            color: #ffca2c !important; font-weight: 800 !important; 
+            text-decoration: underline dashed rgba(255,193,7,0.4); text-underline-offset: 3px; 
         }
-        .linha-destaque .copy-button:hover { 
-            color: #fff !important; 
-            text-decoration-color: #fff !important; 
-            text-shadow: 0 0 8px rgba(255,193,7,0.5) !important;
-        }
+        .linha-destaque .copy-button:hover { color: #fff !important; text-decoration-color: #fff !important; text-shadow: 0 0 8px rgba(255,193,7,0.5) !important;}
 
         .linha-selecionada td { background-color: rgba(0, 0, 0, 0.4) !important; color: #555 !important; text-decoration: line-through; font-weight: 500 !important;}
         .linha-selecionada .copy-button { color: #555 !important; text-decoration: line-through; font-weight: 500 !important;}
@@ -228,7 +251,6 @@
         .details-row { display: none; }
         .details-row td { background-color: #151515; border-top: none; padding: 10px 15px 15px 15px; color: #ccc !important; }
         
-        /* Observação alinhada e bloqueada na mesma linha */
         .obs-tag { 
             display: flex; align-items: flex-start; gap: 6px; 
             color: #888; font-size: 12px; font-weight: 700; margin-bottom: 8px; padding-bottom: 8px; 
@@ -284,14 +306,18 @@
 <body class="mode-cadastro">
 
     <div id="loading-screen">
-        <img src="logo.png" alt="Logo Novagne" class="company-logo pulse-logo">
+        <div class="logo-wrapper loading-glow">
+            <img src="logo.png" alt="Logo Novagne" class="company-logo">
+        </div>
         <div class="spinner"></div>
         <p>Sincronizando com a nuvem...</p>
     </div>
 
     <div id="login-screen">
         <div class="login-box">
-            <img src="logo.png" alt="Logo Novagne" class="company-logo">
+            <div class="logo-wrapper">
+                <img src="logo.png" alt="Logo Novagne" class="company-logo">
+            </div>
             <h2>Acesso Restrito</h2>
             <p>Faça login com sua conta corporativa para acessar o sistema.</p>
             
@@ -511,9 +537,7 @@
         }
 
         function logoutFirebase() {
-            auth.signOut().then(() => {
-                // Apenas desloga silenciosamente, a tela de login vai aparecer
-            });
+            auth.signOut().then(() => {});
         }
 
         auth.onAuthStateChanged(user => {
