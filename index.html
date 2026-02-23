@@ -14,10 +14,10 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 
     <style>
-        /* --- ESTILOS GERAIS --- */
+        /* --- ESTILOS GERAIS (LAYOUT MAIS COMPACTO PARA SUBIR CONTEÚDO) --- */
         body { 
             font-family: 'Inter', sans-serif; background-color: #0d0d0d; color: #e0e0e0; 
-            margin: 0; padding: 15px 20px; display: flex; flex-direction: column; align-items: center; 
+            margin: 0; padding: 8px 15px; display: flex; flex-direction: column; align-items: center; 
             transition: background-color 0.5s ease; height: 100vh; box-sizing: border-box; overflow: hidden; 
         }
         ::-webkit-scrollbar { width: 8px; height: 8px; }
@@ -43,7 +43,7 @@
         .btn-google img, .btn-google svg { width: 20px; height: 20px; }
 
         /* --- CABEÇALHO DO USUÁRIO --- */
-        .user-header { position: absolute; top: 20px; right: 25px; display: none; align-items: center; gap: 12px; z-index: 100; }
+        .user-header { position: absolute; top: 15px; right: 20px; display: none; align-items: center; gap: 12px; z-index: 100; }
         .user-header.visible { display: flex; }
         .user-info { display: flex; flex-direction: column; align-items: flex-end; }
         .user-name { font-size: 13px; font-weight: 700; color: #fff; }
@@ -53,22 +53,22 @@
 
         /* --- CONTAINER PRINCIPAL --- */
         .container { 
-            background-color: #1a1a1a; padding: 15px 25px; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.6); width: 100%; max-width: 1400px; flex: 1; min-height: 0; display: none; flex-direction: column; border: 1px solid #333; border-top-width: 6px; box-sizing: border-box; transition: border-color 0.4s, box-shadow 0.4s; position: relative;
+            background-color: #1a1a1a; padding: 10px 20px; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.6); width: 100%; max-width: 1400px; flex: 1; min-height: 0; display: none; flex-direction: column; border: 1px solid #333; border-top-width: 4px; box-sizing: border-box; transition: border-color 0.4s, box-shadow 0.4s; position: relative;
         }
         .container.visible { display: flex; animation: fadeIn 0.6s ease forwards; }
 
-        h2 { color: #fff; margin-top: 0; margin-bottom: 10px; font-weight: 700; letter-spacing: 1px; font-size: 20px;}
+        h2 { color: #fff; margin-top: 0; margin-bottom: 8px; font-weight: 700; letter-spacing: 1px; font-size: 18px;}
 
         /* --- NAVEGAÇÃO --- */
-        .main-nav { display: flex; justify-content: center; gap: 15px; margin-bottom: 15px; align-self: center; flex-shrink: 0; }
-        .main-nav-btn { font-family: 'Inter', sans-serif; background-color: #2a2a2a; border: 1px solid transparent; color: #ccc; padding: 10px 0; font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; border-radius: 8px; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; align-items: center; justify-content: center; gap: 8px; width: 170px; }
+        .main-nav { display: flex; justify-content: center; gap: 15px; margin-bottom: 10px; align-self: center; flex-shrink: 0; }
+        .main-nav-btn { font-family: 'Inter', sans-serif; background-color: #2a2a2a; border: 1px solid transparent; color: #ccc; padding: 8px 0; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; border-radius: 8px; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; align-items: center; justify-content: center; gap: 8px; width: 160px; }
         .main-nav-btn:hover { color: #fff; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
         .main-nav-btn:active { transform: scale(0.97); box-shadow: none !important; }
         
-        .sub-nav { display: flex; gap: 10px; margin-bottom: 15px; border-bottom: 2px solid #222; padding-bottom: 8px; flex-shrink: 0; }
-        .sub-nav-btn { font-family: 'Inter', sans-serif; background: transparent; border: none; color: #888; font-size: 12px; font-weight: 600; text-transform: uppercase; padding: 8px 15px; cursor: pointer; transition: 0.3s; position: relative; }
+        .sub-nav { display: flex; gap: 10px; margin-bottom: 10px; border-bottom: 2px solid #222; padding-bottom: 5px; flex-shrink: 0; }
+        .sub-nav-btn { font-family: 'Inter', sans-serif; background: transparent; border: none; color: #888; font-size: 11px; font-weight: 600; text-transform: uppercase; padding: 6px 15px; cursor: pointer; transition: 0.3s; position: relative; }
         .sub-nav-btn:hover { color: #fff; }
-        .sub-nav-btn::after { content: ''; position: absolute; bottom: -10px; left: 0; width: 100%; height: 3px; border-radius: 3px 3px 0 0; background: transparent; transition: 0.3s; transform: scaleX(0); }
+        .sub-nav-btn::after { content: ''; position: absolute; bottom: -7px; left: 0; width: 100%; height: 3px; border-radius: 3px 3px 0 0; background: transparent; transition: 0.3s; transform: scaleX(0); }
         .sub-nav-btn.active::after { transform: scaleX(1); }
         .sub-nav-btn.active { color: #fff; font-weight: 800; }
 
@@ -88,29 +88,27 @@
         .mode-boletos .sub-nav-btn.active::after { background: #28a745; }
 
         /* --- COMPONENTES --- */
-        .meta-container { background: rgba(255,255,255,0.03); padding: 12px 20px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #333; transition: all 0.5s ease; position: relative; overflow: hidden; flex-shrink: 0; }
-        .meta-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; position: relative; z-index: 2; }
-        .meta-text-title { font-size: 13px; font-weight: 800; color: #fff; letter-spacing: 0.5px; display: flex; align-items: center; }
-        .meta-text-count { font-size: 12px; color: #aaa; }
+        .meta-container { background: rgba(255,255,255,0.03); padding: 8px 15px; border-radius: 12px; margin-bottom: 10px; border: 1px solid #333; transition: all 0.5s ease; position: relative; overflow: hidden; flex-shrink: 0; }
+        .meta-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; position: relative; z-index: 2; }
+        .meta-text-title { font-size: 12px; font-weight: 800; color: #fff; letter-spacing: 0.5px; display: flex; align-items: center; }
+        .meta-text-count { font-size: 11px; color: #aaa; }
         .btn-meta { font-family: 'Inter', sans-serif; background: #2a2a2a; border: 1px solid #555; color: #ddd; padding: 4px 10px; border-radius: 6px; font-size: 10px; cursor: pointer; text-transform: uppercase; transition: 0.2s; font-weight: bold; }
         .btn-meta:hover { background: #444; color: #fff; border-color: #4dabf7; }
-        .progress-bar-bg { width: 100%; height: 12px; background: #111; border-radius: 8px; overflow: hidden; box-shadow: inset 0 2px 5px rgba(0,0,0,0.8); position: relative; z-index: 2; }
+        .progress-bar-bg { width: 100%; height: 10px; background: #111; border-radius: 8px; overflow: hidden; box-shadow: inset 0 2px 5px rgba(0,0,0,0.8); position: relative; z-index: 2; }
         .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #0056b3, #00d4ff); width: 0%; transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 0 15px rgba(0, 123, 255, 0.5); }
         .meta-success { border-color: #ffc107; box-shadow: 0 0 30px rgba(255, 193, 7, 0.15); background: rgba(255, 193, 7, 0.05); }
         .meta-success .progress-bar-fill { background: linear-gradient(90deg, #ffc107, #ffe066); box-shadow: 0 0 20px rgba(255, 193, 7, 0.6); }
 
-        /* --- SMART PASTE ZONE --- */
-        .smart-paste-zone { border: 2px dashed #444; border-radius: 12px; padding: 15px; text-align: center; background-color: #151515; cursor: pointer; transition: all 0.3s ease; margin-bottom: 15px; outline: none; display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 80px; flex-shrink: 0; }
+        .smart-paste-zone { border: 2px dashed #444; border-radius: 12px; padding: 10px; text-align: center; background-color: #151515; cursor: pointer; transition: all 0.3s ease; margin-bottom: 10px; outline: none; display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 60px; flex-shrink: 0; }
         .mode-cadastro .smart-paste-zone:hover, .mode-cadastro .smart-paste-zone:focus { border-color: #007bff; background-color: #1a1a1a; box-shadow: 0 0 15px rgba(0,123,255,0.1); }
         .mode-boletos .smart-paste-zone:hover, .mode-boletos .smart-paste-zone:focus { border-color: #28a745; background-color: #1a1a1a; box-shadow: 0 0 15px rgba(40,167,69,0.1); }
-        .paste-icon { font-size: 20px; margin-bottom: 5px; opacity: 0.8; }
-        .smart-paste-zone h3 { margin: 0 0 4px 0; color: #fff; font-size: 15px; font-weight: 700; }
-        .smart-paste-zone p { margin: 0; color: #888; font-size: 12px; }
+        .paste-icon { font-size: 18px; margin-bottom: 2px; opacity: 0.8; }
+        .smart-paste-zone h3 { margin: 0 0 2px 0; color: #fff; font-size: 14px; font-weight: 700; }
+        .smart-paste-zone p { margin: 0; color: #888; font-size: 11px; }
         textarea { display: none; } 
 
-        /* --- BOTÕES --- */
-        .button-group { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; justify-content: center; flex-shrink: 0;}
-        button { font-family: 'Inter', sans-serif; padding: 10px 20px; color: #ccc; border: 1px solid transparent; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; transition: all 0.2s ease; background-color: #2a2a2a; }
+        .button-group { display: flex; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; justify-content: center; flex-shrink: 0;}
+        button { font-family: 'Inter', sans-serif; padding: 8px 18px; color: #ccc; border: 1px solid transparent; border-radius: 8px; cursor: pointer; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; transition: all 0.2s ease; background-color: #2a2a2a; }
         button:hover { color: white; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
         button:active { transform: scale(0.97); box-shadow: none !important; }
         .btn-cad { background: linear-gradient(180deg, #0056b3, #004494); color: white; border: 1px solid #004494; }
@@ -125,49 +123,48 @@
         .btn-reset:hover { background: linear-gradient(180deg, #8a0000, #5c0000); color: white; box-shadow: 0 0 15px rgba(255, 0, 0, 0.2); }
 
         /* --- FILTROS E ESTATÍSTICAS --- */
-        .filter-controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; gap: 15px; width: 100%; flex-wrap: wrap; flex-shrink: 0;}
+        .filter-controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; gap: 15px; width: 100%; flex-wrap: wrap; flex-shrink: 0;}
         .filter-left { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-        .month-select { font-family: 'Inter', sans-serif; padding: 8px 12px; border-radius: 6px; background-color: #111; color: #fff; border: 1px solid #444; font-size: 12px; font-weight: 600; outline: none; cursor: pointer; }
+        .month-select { font-family: 'Inter', sans-serif; padding: 6px 10px; border-radius: 6px; background-color: #111; color: #fff; border: 1px solid #444; font-size: 12px; font-weight: 600; outline: none; cursor: pointer; }
         .stat-btn-group { display: flex; gap: 5px; background: #111; padding: 4px; border-radius: 8px; border: 1px solid #333;}
         .stat-btn { font-family: 'Inter', sans-serif; background: transparent; color: #888; border: none; padding: 6px 12px; border-radius: 4px; font-size: 11px; transition: 0.3s; box-shadow: none; text-transform: uppercase; font-weight: bold;}
         .stat-btn:hover { color: #fff; background: rgba(255,255,255,0.05); transform: none;}
         .mode-cadastro .stat-btn.active { background: #0056b3; color: #fff; }
         .mode-boletos .stat-btn.active { background: #1e7e34; color: #fff; }
         
-        .export-container { padding: 15px 20px; border-radius: 12px; background-color: #1a1a1a; border: 1px solid transparent; display: flex; flex-direction: column; flex: 1; min-height: 0; overflow-y: auto;}
+        .export-container { padding: 10px 15px; border-radius: 12px; background-color: #1a1a1a; border: 1px solid transparent; display: flex; flex-direction: column; flex: 1; min-height: 0; overflow-y: auto;}
         .export-header { display: flex; flex-direction: column; align-items: flex-start; margin-bottom: 10px; border-bottom: 1px solid #333; padding-bottom: 10px; flex-shrink: 0;}
         .export-controls { display: flex; justify-content: space-between; align-items: center; width: 100%; margin-top: 10px; }
         .export-controls-left { display: flex; gap: 10px; align-items: center; }
-        .metrics-wrapper { display: flex; gap: 15px; justify-content: center; margin-bottom: 15px; flex-wrap: wrap; flex-shrink: 0;}
-        .metric-box { background: rgba(255,255,255,0.03); padding: 12px; border-radius: 8px; border: 1px solid #333; text-align: center; display: flex; flex-direction: column; gap: 5px; min-width: 130px; flex: 1; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
-        .metric-box span { font-size: 10px; color: #888; text-transform: uppercase; letter-spacing: 1px; font-weight: 700;}
-        .metric-box strong { font-size: 26px; color: #fff; font-weight: 800; line-height: 1; }
-        .weekly-breakdown { display: flex; gap: 8px; justify-content: center; margin-bottom: 15px; flex-wrap: wrap; flex-shrink: 0;}
-        .weekly-breakdown .metric-box { min-width: 90px; padding: 8px 5px; }
-        .weekly-breakdown span { font-size: 9px; line-height: 1.3; color: #777; white-space: nowrap; } 
-        .weekly-breakdown strong { font-size: 18px; margin-top: 2px; }
+        .metrics-wrapper { display: flex; gap: 10px; justify-content: center; margin-bottom: 10px; flex-wrap: wrap; flex-shrink: 0;}
+        .metric-box { background: rgba(255,255,255,0.03); padding: 10px; border-radius: 8px; border: 1px solid #333; text-align: center; display: flex; flex-direction: column; gap: 5px; min-width: 120px; flex: 1; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+        .metric-box span { font-size: 9px; color: #888; text-transform: uppercase; letter-spacing: 1px; font-weight: 700;}
+        .metric-box strong { font-size: 24px; color: #fff; font-weight: 800; line-height: 1; }
+        .weekly-breakdown { display: flex; gap: 8px; justify-content: center; margin-bottom: 10px; flex-wrap: wrap; flex-shrink: 0;}
+        .weekly-breakdown .metric-box { min-width: 80px; padding: 6px 5px; }
+        .weekly-breakdown span { font-size: 8px; line-height: 1.3; color: #777; white-space: nowrap; } 
+        .weekly-breakdown strong { font-size: 16px; margin-top: 2px; }
         .mode-cadastro .metric-box strong { color: #4dabf7; text-shadow: 0 0 10px rgba(0, 123, 255, 0.3); }
         .mode-boletos .metric-box strong { color: #28a745; text-shadow: 0 0 10px rgba(40, 167, 69, 0.3); }
         
-        /* RANKING DA EQUIPE */
-        .ranking-container { display: flex; flex-direction: column; width: 100%; margin-bottom: 15px; flex-shrink: 0; border-top: 1px dashed #333; padding-top: 15px;}
-        .ranking-title { color: #aaa; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin-bottom: 10px; display: flex; align-items: center; gap: 5px;}
-        .ranking-cards { display: flex; gap: 10px; flex-wrap: wrap; }
-        .ranking-item { background: #222; border: 1px solid #444; border-radius: 6px; padding: 10px 15px; display: flex; align-items: center; justify-content: space-between; gap: 15px; flex: 1; min-width: 150px;}
-        .ranking-item-name { font-size: 13px; font-weight: 600; color: #ddd; }
-        .ranking-item-val { font-size: 18px; font-weight: 800; color: #fff; }
+        .ranking-container { display: flex; flex-direction: column; width: 100%; margin-bottom: 10px; flex-shrink: 0; border-top: 1px dashed #333; padding-top: 10px;}
+        .ranking-title { color: #aaa; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin-bottom: 8px; display: flex; align-items: center; gap: 5px;}
+        .ranking-cards { display: flex; gap: 8px; flex-wrap: wrap; }
+        .ranking-item { background: #222; border: 1px solid #444; border-radius: 6px; padding: 8px 12px; display: flex; align-items: center; justify-content: space-between; gap: 10px; flex: 1; min-width: 130px;}
+        .ranking-item-name { font-size: 12px; font-weight: 600; color: #ddd; }
+        .ranking-item-val { font-size: 16px; font-weight: 800; color: #fff; }
         .mode-cadastro .ranking-item-val { color: #4dabf7; }
         .mode-boletos .ranking-item-val { color: #28a745; }
 
         .hide-on-print-only { display: flex !important; }
-        .chart-wrapper { position: relative; flex: 1; min-height: 150px; width: 100%; margin-top: auto; flex-shrink: 0;}
+        .chart-wrapper { position: relative; flex: 1; min-height: 120px; width: 100%; margin-top: auto; flex-shrink: 0;}
 
         /* --- TABELAS E HISTÓRICO --- */
         .table-responsive { flex: 1; min-height: 0; overflow-y: auto; border: 1px solid #333; border-radius: 8px; background: #111; display: none; } 
         .table-responsive.has-data { display: block; animation: slideUp 0.3s ease forwards; }
         table { width: 100%; border-collapse: separate; border-spacing: 0; }
-        th { background-color: #222; color: #ddd; padding: 12px 15px; text-align: left; font-size: 11px; text-transform: uppercase; border-bottom: 1px solid #444; font-weight: 700; position: sticky; top: 0; z-index: 10; box-shadow: 0 2px 5px rgba(0,0,0,0.5); }
-        td { padding: 10px 15px; text-align: left; vertical-align: middle; font-size: 12px; border-bottom: 1px solid #222; transition: background-color 0.2s; }
+        th { background-color: #222; color: #ddd; padding: 10px 12px; text-align: left; font-size: 11px; text-transform: uppercase; border-bottom: 1px solid #444; font-weight: 700; position: sticky; top: 0; z-index: 10; box-shadow: 0 2px 5px rgba(0,0,0,0.5); }
+        td { padding: 8px 12px; text-align: left; vertical-align: middle; font-size: 12px; border-bottom: 1px solid #222; transition: background-color 0.2s; }
         tr:hover td { background-color: #1a1a1a; }
         .custom-cb { display: block; position: relative; padding-left: 22px; cursor: pointer; font-size: 14px; user-select: none; min-height: 18px; }
         .custom-cb input { position: absolute; opacity: 0; cursor: pointer; height: 0; width: 0; }
@@ -187,11 +184,13 @@
         .linha-selecionada .copy-button { color: #555 !important; text-decoration: line-through; }
         
         .details-row { display: none; }
-        .details-row td { background-color: #151515; border-top: none; padding: 15px 20px 20px 20px; color: #ccc !important; }
+        .details-row td { background-color: #151515; border-top: none; padding: 10px 15px 15px 15px; color: #ccc !important; }
         
         /* NOVO: Tag de Observação da Coluna S */
-        .obs-tag { color: #ffc107; font-size: 12px; font-weight: 700; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px dashed #333; display: block; letter-spacing: 0.5px;}
-        
+        .obs-tag { color: #888; font-size: 12px; font-weight: 700; margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px dashed #333; display: block; letter-spacing: 0.5px; line-height: 1.5;}
+        .obs-copy-btn { width: auto; color: #ffca2c; font-weight: 800; font-size: 12px; text-decoration: underline dashed rgba(255,193,7,0.4); text-underline-offset: 3px; display: inline; padding: 0;}
+        .obs-copy-btn:hover { color: #fff; text-decoration-color: #fff; text-shadow: 0 0 8px rgba(255,193,7,0.5);}
+
         .sub-task-container { display: flex; flex-direction: column; gap: 8px; padding-left: 35px; }
         .sub-task-label { font-size: 11px; font-weight: 600; color: #bbb; cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center;}
         .sub-task-label:hover { color: #ffc107; }
@@ -270,25 +269,19 @@
             </div>
 
             <div id="cadastro-input-tab" class="tab-pane active">
-                
                 <div class="meta-container" id="meta-box-cadastro">
                     <div class="meta-header">
-                        <div class="meta-text-title">
-                            <span id="meta-title-prefix">META DIÁRIA: </span> 
-                            <span id="meta-val-display" style="color:#4dabf7; margin-left:6px;">0</span>
-                        </div>
-                        <div class="meta-text-count"><strong id="progress-count" style="color:#fff;">0</strong> contratos processados hoje</div>
+                        <div class="meta-text-title"><span id="meta-title-prefix">META DIÁRIA: </span><span id="meta-val-display" style="color:#4dabf7; margin-left:6px;">0</span></div>
+                        <div class="meta-text-count"><strong id="progress-count" style="color:#fff;">0</strong> contratos hoje</div>
                         <button class="btn-meta" onclick="editarMeta()">Ajustar Meta</button>
                     </div>
-                    <div class="progress-bar-bg">
-                        <div class="progress-bar-fill" id="progresso-fill"></div>
-                    </div>
+                    <div class="progress-bar-bg"><div class="progress-bar-fill" id="progresso-fill"></div></div>
                 </div>
 
                 <div class="smart-paste-zone" id="paste-zone-cadastro" tabindex="0">
                     <div class="paste-icon">📋</div>
                     <h3>Pronto para receber contratos</h3>
-                    <p>Clique aqui e pressione <b>Ctrl + V</b> para processar os dados instantaneamente.</p>
+                    <p>Clique aqui e pressione <b>Ctrl + V</b> para processar instantaneamente.</p>
                 </div>
 
                 <div class="button-group">
@@ -315,7 +308,6 @@
                 <div id="export-container-cadastro" class="export-container">
                     <div class="export-header">
                         <h2 id="est-title-cadastro" style="color: #4dabf7; margin: 0; text-align: left; width: 100%;">Estatísticas de Cadastro</h2>
-                        
                         <div class="export-controls data-html2canvas-ignore hide-on-print-only">
                             <div class="export-controls-left">
                                 <div class="stat-btn-group">
@@ -352,7 +344,6 @@
             </div>
 
             <div id="boletos-input-tab" class="tab-pane active">
-                
                 <div class="smart-paste-zone" id="paste-zone-boletos" tabindex="0">
                     <div class="paste-icon">📋</div>
                     <h3>Pronto para receber boletos</h3>
@@ -364,7 +355,6 @@
                     <button class="btn-bol" onclick="copiarSelecionados('boletos')" id="btn-copy-boletos">Copiar Selecionados</button>
                     <button class="btn-limpar" onclick="limpar('boletos')">Limpar Tabela</button>
                 </div>
-                
                 <div class="table-responsive" id="res-boletos"></div>
             </div>
 
@@ -383,7 +373,6 @@
                 <div id="export-container-boletos" class="export-container">
                     <div class="export-header">
                         <h2 id="est-title-boletos" style="color: #28a745; margin: 0; text-align: left; width: 100%;">Estatísticas de Boletos</h2>
-                        
                         <div class="export-controls data-html2canvas-ignore hide-on-print-only">
                             <div class="export-controls-left">
                                 <div class="stat-btn-group">
@@ -680,9 +669,12 @@
                 <td><button class="copy-button" onclick="copiar(this)">${cols[4]||''}</button></td>`;
             
             if (tipo === 'cadastro') {
-                // NOVO: Captura a coluna S (índice 18), passa para Maiúsculo e remove traços
-                let obsText = (cols[18] || '').toUpperCase().replace(/-/g, '').trim();
-                let obsHtml = obsText ? `<span class="obs-tag">📌 OBS: ${obsText}</span>` : '';
+                // NOVO: Lê a Coluna S (índice 18), tira acentos/Ç, fica maiúsculo, tira traços.
+                let rawObs = (cols[18] || '').toUpperCase();
+                let obsText = rawObs.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/-/g, '').trim();
+                
+                // NOVO: Adiciona o botão interativo para copiar a OBS
+                let obsHtml = obsText ? `<span class="obs-tag">📌 OBS: <button class="copy-button obs-copy-btn" onclick="copiar(this)">${obsText}</button></span>` : '';
 
                 row += `<td><button class="copy-button" onclick="copiar(this)">${cols[5]||''}</button></td>
                         <td><button class="copy-button" onclick="copiar(this)">${cols[6]||''}</button></td>
@@ -770,7 +762,7 @@
                 showToast(`Copiado: ${btn.textContent}`);
                 const cor = btn.style.color; const sombra = btn.style.textShadow;
                 btn.style.color = "#28a745"; btn.style.textShadow = "0 0 10px rgba(40,167,69,0.5)"; btn.style.fontWeight = "bold";
-                setTimeout(() => { btn.style.color = cor; btn.style.textShadow = sombra; btn.style.fontWeight = "500"; }, 800);
+                setTimeout(() => { btn.style.color = cor; btn.style.textShadow = sombra; btn.style.fontWeight = "800"; }, 800);
             });
         }
 
