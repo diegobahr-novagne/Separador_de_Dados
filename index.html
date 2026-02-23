@@ -14,7 +14,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 
     <style>
-        /* --- ESTILOS GERAIS (LAYOUT MAIS COMPACTO PARA SUBIR CONTEÚDO) --- */
+        /* --- ESTILOS GERAIS --- */
         body { 
             font-family: 'Inter', sans-serif; background-color: #0d0d0d; color: #e0e0e0; 
             margin: 0; padding: 8px 15px; display: flex; flex-direction: column; align-items: center; 
@@ -178,6 +178,7 @@
         #tbl-cadastro .data-row .copy-button { color: #4dabf7; }
         #tbl-boletos .data-row td { color: #00e676; font-weight: 500; }
         #tbl-boletos .data-row .copy-button { color: #00e676; }
+        
         .linha-destaque td { background: linear-gradient(90deg, rgba(255, 193, 7, 0.1) 0%, transparent 100%) !important; color: #fff !important; }
         .linha-destaque td:first-child { border-left: 3px solid #ffc107; }
         .linha-selecionada td { background-color: rgba(0, 0, 0, 0.4) !important; color: #555 !important; text-decoration: line-through; }
@@ -186,9 +187,17 @@
         .details-row { display: none; }
         .details-row td { background-color: #151515; border-top: none; padding: 10px 15px 15px 15px; color: #ccc !important; }
         
-        /* NOVO: Tag de Observação da Coluna S */
-        .obs-tag { color: #888; font-size: 12px; font-weight: 700; margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px dashed #333; display: block; letter-spacing: 0.5px; line-height: 1.5;}
-        .obs-copy-btn { width: auto; color: #ffca2c; font-weight: 800; font-size: 12px; text-decoration: underline dashed rgba(255,193,7,0.4); text-underline-offset: 3px; display: inline; padding: 0;}
+        /* NOVO: Tag de Observação Alinhada na mesma linha usando Flexbox */
+        .obs-tag { 
+            display: flex; align-items: flex-start; gap: 6px; 
+            color: #888; font-size: 12px; font-weight: 700; margin-bottom: 8px; padding-bottom: 8px; 
+            border-bottom: 1px dashed #333; line-height: 1.4;
+        }
+        .obs-copy-btn { 
+            background: none; border: none; cursor: pointer; color: #ffca2c; font-weight: 800; font-size: 12px; 
+            text-decoration: underline dashed rgba(255,193,7,0.4); text-underline-offset: 3px; 
+            padding: 0; margin: 0; font-family: 'Inter', sans-serif; text-align: left; flex: 1;
+        }
         .obs-copy-btn:hover { color: #fff; text-decoration-color: #fff; text-shadow: 0 0 8px rgba(255,193,7,0.5);}
 
         .sub-task-container { display: flex; flex-direction: column; gap: 8px; padding-left: 35px; }
@@ -669,12 +678,12 @@
                 <td><button class="copy-button" onclick="copiar(this)">${cols[4]||''}</button></td>`;
             
             if (tipo === 'cadastro') {
-                // NOVO: Lê a Coluna S (índice 18), tira acentos/Ç, fica maiúsculo, tira traços.
+                // Remove acentos/Ç, fica maiúsculo, tira traços.
                 let rawObs = (cols[18] || '').toUpperCase();
                 let obsText = rawObs.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/-/g, '').trim();
                 
-                // NOVO: Adiciona o botão interativo para copiar a OBS
-                let obsHtml = obsText ? `<span class="obs-tag">📌 OBS: <button class="copy-button obs-copy-btn" onclick="copiar(this)">${obsText}</button></span>` : '';
+                // Botão de copiar a OBS interativo na mesma linha do "PIN"
+                let obsHtml = obsText ? `<div class="obs-tag"><span style="flex-shrink:0;">📌 OBS:</span> <button class="obs-copy-btn" onclick="copiar(this)">${obsText}</button></div>` : '';
 
                 row += `<td><button class="copy-button" onclick="copiar(this)">${cols[5]||''}</button></td>
                         <td><button class="copy-button" onclick="copiar(this)">${cols[6]||''}</button></td>
@@ -691,6 +700,23 @@
                         </td></tr>`;
             } else { row += `</tr>`; }
             return row;
+        }
+
+        // Função para subir as linhas para o topo
+        function moverLinhaParaTopo(tr, tipo) {
+            const tbody = tr.closest('tbody');
+            if (!tbody) return;
+            
+            // Move a linha principal pro topo
+            tbody.insertBefore(tr, tbody.firstChild);
+            
+            // Se for cadastro, a linha de detalhes sobe grudada logo abaixo dela
+            if (tipo === 'cadastro') {
+                const detailsRow = document.getElementById(tr.id + '-details');
+                if (detailsRow) {
+                    tbody.insertBefore(detailsRow, tr.nextSibling);
+                }
+            }
         }
 
         function salvarLinhaNoHistorico(tipo, trElement) {
@@ -713,8 +739,15 @@
         function chkClick(chk) {
             const tr = chk.closest('tr');
             const tipo = currentMode;
-            if (chk.checked) { tr.classList.add('linha-selecionada'); tr.classList.remove('linha-destaque'); salvarLinhaNoHistorico(tipo, tr); } 
-            else { tr.classList.remove('linha-selecionada'); }
+            if (chk.checked) { 
+                tr.classList.add('linha-selecionada'); 
+                tr.classList.remove('linha-destaque'); 
+                salvarLinhaNoHistorico(tipo, tr); 
+                moverLinhaParaTopo(tr, tipo); // NOVO: Move ao completar
+            } else { 
+                tr.classList.remove('linha-selecionada'); 
+            }
+            
             if (tipo === 'cadastro') {
                 const detailsRow = document.getElementById(tr.id + '-details');
                 if (detailsRow) detailsRow.querySelectorAll('.sub-chk').forEach(sub => sub.checked = chk.checked);
@@ -727,10 +760,16 @@
             const mainRow = document.getElementById(detailsRow.id.replace('-details', ''));
             const mainChk = mainRow.querySelector('.chk');
             const allChecked = Array.from(detailsRow.querySelectorAll('.sub-chk')).every(c => c.checked);
+            
             if (mainChk.checked !== allChecked) {
                 mainChk.checked = allChecked;
-                if (allChecked) { mainRow.classList.add('linha-selecionada'); salvarLinhaNoHistorico('cadastro', mainRow); } 
-                else { mainRow.classList.remove('linha-selecionada'); }
+                if (allChecked) { 
+                    mainRow.classList.add('linha-selecionada'); 
+                    salvarLinhaNoHistorico('cadastro', mainRow); 
+                    moverLinhaParaTopo(mainRow, 'cadastro'); // NOVO: Move ao completar as 4 caixas
+                } else { 
+                    mainRow.classList.remove('linha-selecionada'); 
+                }
             }
             atualizarDestaques('cadastro');
         }
